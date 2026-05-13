@@ -881,7 +881,7 @@
 
   /* cursor blink for typewriter */
   @keyframes blink-cursor { 0%,100%{border-right:2px solid #00c896} 50%{border-right:2px solid transparent} }
-  .cursor { display:inline-block; border-right:2px solid #00c896; animation: blink-cursor 1s step-end infinite; margin-right: -2px; }
+  .cursor { display:inline-block; border-right:2px solid #00c896; animation: blink-cursor 1s step-end infinite; margin-right:-2px; }
 
   /* scanning line effect */
   @keyframes scan { 0%{transform:translateY(-100%)} 100%{transform:translateY(100%)} }
@@ -1049,29 +1049,31 @@ const LEAK_LINES = [
 // ─────────────────────────────────────────────────────────────────
 // Start animations on scroll-into-view
 // ─────────────────────────────────────────────────────────────────
-var espStarted = false, ptwStarted = false, leakStarted = false;
+var espStarted = false;
+var ptwStarted = false;
+var leakStarted = false;
 
-function startDemo(id, lines, startedFlag) {
-  if (startedFlag) return;
-  startedFlag[0] = true;
+function startDemo(id, lines, startedVar) {
+  if (startedVar.flag) return;
+  startedVar.flag = true;
   animateLines(id, lines);
 }
 
 var espObs = new IntersectionObserver(function(entries) {
   entries.forEach(function(e) {
-    if (e.isIntersecting) startDemo('esp-lines', ESP_LINES, [espStarted = true]);
+    if (e.isIntersecting) startDemo('esp-lines', ESP_LINES, {flag: espStarted});
   });
 }, { threshold: 0.3 });
 
 var ptwObs = new IntersectionObserver(function(entries) {
   entries.forEach(function(e) {
-    if (e.isIntersecting) startDemo('ptw-lines', PTW_LINES, [ptwStarted = true]);
+    if (e.isIntersecting) startDemo('ptw-lines', PTW_LINES, {flag: ptwStarted});
   });
 }, { threshold: 0.3 });
 
 var leakObs = new IntersectionObserver(function(entries) {
   entries.forEach(function(e) {
-    if (e.isIntersecting) startDemo('leak-lines', LEAK_LINES, [leakStarted = true]);
+    if (e.isIntersecting) startDemo('leak-lines', LEAK_LINES, {flag: leakStarted});
   });
 }, { threshold: 0.3 });
 
