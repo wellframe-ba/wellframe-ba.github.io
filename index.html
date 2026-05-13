@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wellframe — AI Agent Skills for Oil &amp; Gas Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #080c10;
+      --bg-card: #0e1318;
+      --bg-card-hover: #131a21;
+      --border: #1c2530;
+      --border-bright: #2a3847;
+      --text-primary: #f0f4f8;
+      --text-secondary: #8a9bb0;
+      --text-muted: #506070;
+      --accent: #00c896;
+      --accent-dim: rgba(0, 200, 150, 0.12);
+      --accent-glow: rgba(0, 200, 150, 0.25);
+      --amber: #f5a623;
+      --amber-dim: rgba(245, 166, 35, 0.12);
+      --red: #e05252;
+      --red-dim: rgba(224, 82, 82, 0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .hero {
+      background: linear-gradient(180deg, #0a1018 0%, var(--bg) 100%);
+      padding: 64px 24px 48px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      opacity: 0.4;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--accent-dim);
+      border: 1px solid rgba(0,200,150,0.3);
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    h1 .accent { color: var(--accent); }
+    h1 .dim { color: var(--text-secondary); font-weight: 700; }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 620px;
+      margin: 0 auto 32px;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .hero-stat {
+      text-align: center;
+    }
+    .hero-stat .number {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .hero-stat .label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+    }
+
+    .section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin-bottom: 32px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-bright);
+    }
+    .card .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+    .card .icon.green { background: var(--accent-dim); color: var(--accent); }
+    .card .icon.amber { background: var(--amber-dim); color: var(--amber); }
+    .card .icon.red { background: var(--red-dim); color: var(--red); }
+    .card h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .card .metric {
+      margin-top: 14px;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .card .metric-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 8px;
+    }
+    .skill-tag {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.2s;
+    }
+    .skill-tag:hover { background: var(--bg-card-hover); }
+    .skill-tag .num {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      background: var(--accent-dim);
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .skill-tag .name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .skill-tag .segment {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .model-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 680px) {
+      .model-grid { grid-template-columns: 1fr; }
+    }
+    .model-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+    }
+    .model-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .model-card .price {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .model-card ul {
+      list-style: none;
+    }
+    .model-card li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .model-card li:last-child { border-bottom: none; }
+    .model-card li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .cta-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+      margin: 48px auto;
+      max-width: 1100px;
+    }
+    .cta-section h2 {
+      font-size: clamp(22px, 3vw, 34px);
+      margin-bottom: 12px;
+    }
+    .cta-section p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto 32px;
+    }
+    .cta-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 13px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+    .btn-primary:hover { background: #00e0aa; transform: translateY(-1px); }
+    .btn-secondary {
+      background: var(--bg-card-hover);
+      border: 1px solid var(--border-bright);
+      color: var(--text-primary);
+    }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+    .problem-solution {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .problem-solution .arrow {
+      font-size: 28px;
+      color: var(--accent);
+      text-align: center;
+    }
+    @media (max-width: 680px) {
+      .problem-solution { grid-template-columns: 1fr; }
+      .problem-solution .arrow { display: none; }
+    }
+    .ps-block h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .ps-block .item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .ps-block .item.neg { border-left: 3px solid var(--red); }
+    .ps-block .item.pos { border-left: 3px solid var(--accent); }
+
+    .pain-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .pain-bar h4 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .pain-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .pain-item:last-child { margin-bottom: 0; }
+    .pain-item .label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      width: 240px;
+      flex-shrink: 0;
+    }
+    .pain-item .bar-wrap {
+      flex: 1;
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .pain-item .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--amber);
+    }
+    .pain-item .pct {
+      font-size: 11px;
+      color: var(--amber);
+      font-weight: 600;
+      width: 36px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .comparison-table th {
+      text-align: left;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-bright);
+    }
+    .comparison-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table td:first-child { color: var(--text-primary); font-weight: 500; }
+    .comparison-table td.highlight { color: var(--accent); font-weight: 600; }
+    .comparison-table td.neg { color: var(--red); }
+
+    .how-step {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 24px;
+      align-items: flex-start;
+    }
+    .how-step .num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .how-step h4 {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .how-step p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .how-step .dur {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .section { padding: 36px 16px; }
+      .cta-section { padding: 32px 16px; margin: 32px 16px; }
+      .pain-item .label { width: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">22 Production-Ready AI Skills</div>
+  <h1>Oil &amp; Gas AI Agents — <br><span class="dim">Built for </span><span class="accent">Alberta Operations</span></h1>
+  <p>A library of 22 field-tested AI agent skills covering drilling, production, pipeline, HSE, and enterprise workflows. Each skill is built with real operational data, physics constraints, and escalation logic — ready to deploy into your SCADA and data environment.</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="number">22</div>
+      <div class="label">AI Agent Skills</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">66</div>
+      <div class="label">Test Cases</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">66/66</div>
+      <div class="label">Tests Passing</div>
+    </div>
+    <div class="hero-stat">
+      <div class="number">CAD $1.2B</div>
+      <div class="label">Canada O&G AI Market</div>
+    </div>
+  </div>
+</div>
+
+<!-- THE PAIN -->
+<div class="section">
+  <div class="section-label">The Problem</div>
+  <h2>AI Pilots Are Failing in Oil &amp; Gas</h2>
+  <p class="section-desc">Only 27% of O&G companies report satisfaction with AI/ML ROI. The industry is full of stalled pilots, expensive consultants, and systems that work in demos but fail in production.</p>
+
+  <div class="pain-bar">
+    <h4>Why AI Investments Underperform</h4>
+    <div class="pain-item">
+      <div class="label">Generic AI, no domain depth</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:82%"></div></div>
+      <div class="pct">82%</div>
+    </div>
+    <div class="pain-item">
+      <div class="label">Pilot never reached production</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:73%"></div></div>
+      <div class="pct">73%</div>
+    </div>
+    <div class="pain-item">
+      <div class="label">No physics constraints — unsafe recommendations</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:67%"></div></div>
+      <div class="pct">67%</div>
+    </div>
+    <div class="pain-item">
+      <div class="label">Vendor lock-in (big consulting, no leverage)</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:61%"></div></div>
+      <div class="pct">61%</div>
+    </div>
+    <div class="pain-item">
+      <div class="label">Mid-cap operators excluded from big-firm pricing</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:58%"></div></div>
+      <div class="pct">58%</div>
+    </div>
+  </div>
+</div>
+
+<!-- THE SOLUTION -->
+<div class="section">
+  <div class="section-label">The Solution</div>
+  <h2>From Failed Pilots to Production Skills</h2>
+  <p class="section-desc">Each skill is a defined operational workflow — inputs, outputs, decision rules, physics constraints, and escalation protocols — that can be deployed into your environment in weeks, not months.</p>
+
+  <div class="problem-solution">
+    <div class="ps-block">
+      <h4>What Generic AI Gives You</h4>
+      <div class="item neg">Vague recommendations with no operational context</div>
+      <div class="item neg">No understanding of WOB limits, formation fracture gradients, or IPR constraints</div>
+      <div class="item neg">Hallucinated well names, formation depths, sensor thresholds</div>
+      <div class="item neg">Consultant dependency — you can't maintain it without them</div>
+      <div class="item neg">Pilot that never connects to SCADA or historian</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="ps-block">
+      <h4>What Our Skills Give You</h4>
+      <div class="item pos">22 domain-specific agent workflows built for Alberta operations</div>
+      <div class="item pos">Physics constraints hard-coded — agent cannot exceed formation inflow capacity or WOB limits</div>
+      <div class="item pos">Real sensor thresholds, equipment specs, regulatory limits — validated against field data</div>
+      <div class="item pos">Owned workflow definition — your team can read, audit, and modify it</div>
+      <div class="item pos">MCP server integration for SCADA, simulation, and regulatory systems</div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS OVERVIEW -->
+<div class="section">
+  <div class="section-label">What's Included</div>
+  <h2>22 Skills Across the Full O&G Value Chain</h2>
+  <p class="section-desc">Every skill is production-mature at L2 — tested with real operational data, decision rules, and physics constraints. Ready for pilot deployment today.</p>
+
+  <div class="skills-grid">
+    <div class="skill-tag"><div class="num">1.1</div><div class="name">Autonomous Seismic Interpretation</div><div class="segment">Upstream</div></div>
+    <div class="skill-tag"><div class="num">1.2</div><div class="name">AI Drilling Agent + SCADA</div><div class="segment">Upstream</div></div>
+    <div class="skill-tag"><div class="num">1.3</div><div class="name">Subsurface Advisor (Geomechanics)</div><div class="segment">Upstream</div></div>
+    <div class="skill-tag"><div class="num">1.4</div><div class="name">Formation-Specific Casing Design</div><div class="segment">Upstream</div></div>
+    <div class="skill-tag"><div class="num">2.1</div><div class="name">Closed-Loop Reservoir Simulation</div><div class="segment">Reservoir</div></div>
+    <div class="skill-tag"><div class="num">2.2</div><div class="name">Physics-Informed Production Optimization</div><div class="segment">Reservoir</div></div>
+    <div class="skill-tag"><div class="num">2.3</div><div class="name">ESP Health &amp; Failure Prediction</div><div class="segment">Reservoir</div></div>
+    <div class="skill-tag"><div class="num">2.4</div><div class="name">Predictive Maintenance</div><div class="segment">Reservoir</div></div>
+    <div class="skill-tag"><div class="num">2.5</div><div class="name">Reservoir Monitoring (4D + PDHG)</div><div class="segment">Reservoir</div></div>
+    <div class="skill-tag"><div class="num">3.1</div><div class="name">Pipeline Integrity Monitoring</div><div class="segment">Midstream</div></div>
+    <div class="skill-tag"><div class="num">3.2</div><div class="name">Pipeline Leak Detection (Multi-Sensor)</div><div class="segment">Midstream</div></div>
+    <div class="skill-tag"><div class="num">3.3</div><div class="name">Logistics Optimization</div><div class="segment">Midstream</div></div>
+    <div class="skill-tag"><div class="num">4.1</div><div class="name">Refinery Process Optimization</div><div class="segment">Downstream</div></div>
+    <div class="skill-tag"><div class="num">4.2</div><div class="name">Catalyst Performance Monitoring</div><div class="segment">Downstream</div></div>
+    <div class="skill-tag"><div class="num">4.3</div><div class="name">Naphtha Pool Scheduling</div><div class="segment">Downstream</div></div>
+    <div class="skill-tag"><div class="num">5.1</div><div class="name">Multimodal HSE Detection</div><div class="segment">HSE</div></div>
+    <div class="skill-tag"><div class="num">5.2</div><div class="name">ESG Auto-Reporting (TIER/AER)</div><div class="segment">HSE</div></div>
+    <div class="skill-tag"><div class="num">5.3</div><div class="name">Permit to Work Management</div><div class="segment">HSE</div></div>
+    <div class="skill-tag"><div class="num">6.1</div><div class="name">Technical Document Query (80-yr archive)</div><div class="segment">Enterprise</div></div>
+    <div class="skill-tag"><div class="num">6.2</div><div class="name">Multi-Agent Field Orchestration</div><div class="segment">Enterprise</div></div>
+    <div class="skill-tag"><div class="num">6.3</div><div class="name">Autonomous Supply Chain</div><div class="segment">Enterprise</div></div>
+    <div class="skill-tag"><div class="num">6.4</div><div class="name">Market Intelligence</div><div class="segment">Enterprise</div></div>
+  </div>
+</div>
+
+<!-- BUSINESS MODEL -->
+<div class="section">
+  <div class="section-label">Business Model</div>
+  <h2>How We Work With Operators</h2>
+  <p class="section-desc">Three engagement phases — start small, prove value, scale up.</p>
+
+  <div class="model-grid">
+    <div class="model-card">
+      <h3>Phase 1 — Discovery Workshop</h3>
+      <div class="price">CAD 7,500</div>
+      <ul>
+        <li>2-week AI readiness assessment</li>
+        <li>Identify your 3 highest-value workflow pain points</li>
+        <li>Map pain points to relevant skills in our library</li>
+        <li>Data infrastructure audit (SCADA, historian, documents)</li>
+        <li>Written recommendation: which skill to pilot first</li>
+      </ul>
+    </div>
+    <div class="model-card">
+      <h3>Phase 2 — Paid Pilot</h3>
+      <div class="price">CAD 25K–50K</div>
+      <ul>
+        <li>60–90 day deployment of one production-ready skill</li>
+        <li>Integration with your real-time data (SCADA, LWD, historians)</li>
+        <li>Measured outcome — quantified ROI</li>
+        <li>PTAC co-funding available (reduces your cost 30–50%)</li>
+        <li>Full documentation of decision logic and constraints</li>
+      </ul>
+    </div>
+    <div class="model-card">
+      <h3>Phase 3 — Annual Retainer</h3>
+      <div class="price">CAD 60K–200K / year</div>
+      <ul>
+        <li>Ongoing access to full skills library</li>
+        <li>Monthly optimization review with your operations team</li>
+        <li>New skill releases as we mature the library</li>
+        <li>Custom constraint tuning for your specific assets</li>
+        <li>24/7 alert routing and escalation support</li>
+      </ul>
+    </div>
+    <div class="model-card">
+      <h3>Skill Licensing</h3>
+      <div class="price">CAD 2K–15K / month</div>
+      <ul>
+        <li>License a specific skill for your operation</li>
+        <li>We maintain, update, and improve the skill</li>
+        <li>Operator owns the workflow definition</li>
+        <li>No vendor lock-in — full transparency</li>
+        <li>Physics constraints stay under your control</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- COMPETITIVE EDGE -->
+<div class="section">
+  <div class="section-label">Why Us</div>
+  <h2>Boutique Depth. Not Big-Firm Overhead.</h2>
+  <p class="section-desc">Mid-cap Alberta operators are the sweet spot — large enough to have real data infrastructure, small enough that Accenture and Deloitte won't call back.</p>
+
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Accenture / Deloitte</th>
+        <th>In-House Team</th>
+        <th class="highlight">Our Skills</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Minimum engagement</td>
+        <td class="neg">CAD 500K+</td>
+        <td>Internal headcount</td>
+        <td class="highlight">CAD 7,500 discovery</td>
+      </tr>
+      <tr>
+        <td>Time to first value</td>
+        <td class="neg">6–18 months</td>
+        <td>12–24 months</td>
+        <td class="highlight">2–4 weeks</td>
+      </tr>
+      <tr>
+        <td>Physics constraints</td>
+        <td class="neg">Generic prompts</td>
+        <td>Building from scratch</td>
+        <td class="highlight">Built into every skill</td>
+      </tr>
+      <tr>
+        <td>Alberta regulatory context</td>
+        <td class="neg">Global, not local</td>
+        <td>Expensive to develop</td>
+        <td class="highlight">AER, TIER, Indigenous</td>
+      </tr>
+      <tr>
+        <td>SCADA / MCP integration</td>
+        <td class="neg">Custom build each time</td>
+        <td>Requires OT expertise</td>
+        <td class="highlight">Pre-built connectors</td>
+      </tr>
+      <tr>
+        <td>Vendor lock-in</td>
+        <td class="neg">High — you need them</td>
+        <td>N/A (internal)</td>
+        <td class="highlight">Low — you own the workflow</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- HOW TO ENGAGE -->
+<div class="section">
+  <div class="section-label">How to Get Started</div>
+  <h2>From First Conversation to Production</h2>
+  <p class="section-desc">A practical path to AI agents in your operations — no massive commitment required upfront.</p>
+
+  <div style="max-width: 640px;">
+    <div class="how-step">
+      <div class="num">1</div>
+      <div>
+        <h4>Book a 30-Minute Discovery Call</h4>
+        <p>Tell us your operation — which assets, which pain points. We match you to the relevant skills and tell you upfront if we're a good fit.</p>
+        <div class="dur">No commitment. No pitch deck.</div>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="num">2</div>
+      <div>
+        <h4>AI Readiness + Skills Assessment (2 weeks)</h4>
+        <p>We audit your data infrastructure, identify the highest-value workflow, and give you a written recommendation — which skill, what data it needs, what outcome to expect.</p>
+        <div class="dur">CAD 7,500 — credited toward pilot if you proceed</div>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="num">3</div>
+      <div>
+        <h4>60-Day Paid Pilot (one skill)</h4>
+        <p>We deploy, integrate, and measure. You get real-time recommendations running against your actual SCADA data. Quantified ROI at the end.</p>
+        <div class="dur">CAD 25K–50K — PTAC co-funding may reduce this 30–50%</div>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="num">4</div>
+      <div>
+        <h4>Retainer or License — Scale Up</h4>
+        <p>Expand to additional skills, bring in the field orchestration layer, or license individual skills. Your choice — no forced bundling.</p>
+        <div class="dur">CAD 60K–200K/year or CAD 2K–15K/month per skill</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- VALUE DRIVERS -->
+<div class="section">
+  <div class="section-label">Return on Investment</div>
+  <h2>What Each Skill Can Deliver</h2>
+  <p class="section-desc">Quantified operational impact from real intervention costs.</p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="icon green">⬇</div>
+      <h3>Drilling Agent</h3>
+      <p>Autonomous WOB/RPM optimization within pre-approved windows. Reduces NPT on a 30-day well by 8–15%.</p>
+      <div class="metric">CAD 50K–200K</div>
+      <div class="metric-label">NPT savings per well</div>
+    </div>
+    <div class="card">
+      <div class="icon amber">⚡</div>
+      <h3>ESP Health Monitor</h3>
+      <p>Predicts motor winding, bearing, and sand abrasion failures 7–30 days ahead. Avoids CAD 180K emergency pulls.</p>
+      <div class="metric">CAD 95K</div>
+      <div class="metric-label">Emergency vs. planned pull delta</div>
+    </div>
+    <div class="card">
+      <div class="icon green">🌿</div>
+      <h3>ESG Auto-Reporter</h3>
+      <p>Automated TIER and AER submissions from IoT data streams. Cuts manual reporting from weeks to minutes.</p>
+      <div class="metric">80–90%</div>
+      <div class="metric-label">Reduction in ESG reporting time</div>
+    </div>
+    <div class="card">
+      <div class="icon green">📋</div>
+      <h3>PTW Validator</h3>
+      <p>Pre-clears permits against live gas detection and personnel location. Prevents hot work incidents before they occur.</p>
+      <div class="metric">100%</div>
+      <div class="metric-label">Permit pre-clearance audit coverage</div>
+    </div>
+    <div class="card">
+      <div class="icon amber">🔍</div>
+      <h3>Pipeline Leak Detection</h3>
+      <p>SCADA + fiber optic DTS/DAS triangulation. Detects leaks at 0.5% of nominal flow within minutes.</p>
+      <div class="metric">CAD 180K</div>
+      <div class="metric-label">Avg leak response + cleanup cost</div>
+    </div>
+    <div class="card">
+      <div class="icon green">📄</div>
+      <h3>Document Query Agent</h3>
+      <p>Natural language search across 80 years of proprietary well files, drilling reports, and engineering studies.</p>
+      <div class="metric">Hours → Seconds</div>
+      <div class="metric-label">Document retrieval speed</div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>Ready to Turn AI Pilots Into<br>Production Operations?</h2>
+  <p>Mid-cap Alberta operators are the sweet spot. If you have SCADA data, real operational pain points, and a team willing to engage — let's talk.</p>
+  <div class="cta-buttons">
+    <a href="mailto:info@example.com" class="btn btn-primary">Book a 30-Minute Discovery Call</a>
+    <a href="https://github.com/swarm260219/oil-and-gas-research" class="btn btn-secondary">View the Skills Library →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Oil &amp; Gas AI Agent Skills Library — 22 skills, 66 tests, built for Alberta operations<br>
+  <span style="color: var(--accent);">BCG:</span> AI integration can generate 30–70% of pre-tax earnings as incremental profit over 5 years
+</div>
+
+</body>
+</html>
