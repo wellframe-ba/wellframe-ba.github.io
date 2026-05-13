@@ -807,6 +807,448 @@
   </div>
 </div>
 
+<!-- DEMO -->
+<div class="section" style="padding-bottom:0;">
+  <div class="section-label">Live Demos</div>
+  <h2>See the Agents Think</h2>
+  <p class="section-desc">Real operational data. Real decision logic. Watch what happens when the sensor data hits the agent.</p>
+</div>
+
+<!-- Three animated demo terminals -->
+<style>
+  .demo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+  }
+  @media (max-width: 900px) {
+    .demo-grid { grid-template-columns: 1fr; }
+  }
+
+  .terminal-wrap {
+    background: #060a0e;
+    border: 1px solid #1c2530;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .term-header {
+    background: #0d1117;
+    border-bottom: 1px solid #1c2530;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .term-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+  }
+  .term-dot.red { background: #e05252; }
+  .term-dot.amber { background: #f5a623; }
+  .term-dot.green { background: #00c896; }
+  .term-title {
+    margin-left: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #506070;
+    letter-spacing: 0.05em;
+    font-family: 'Courier New', monospace;
+  }
+  .term-body {
+    padding: 14px 16px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    min-height: 300px;
+    color: #00c896;
+    background: #060a0e;
+  }
+  .t-prompt { color: #506070; }
+  .t-cmd { color: #f0f4f8; }
+  .t-warn { color: #f5a623; }
+  .t-alert { color: #e05252; }
+  .t-ok { color: #00c896; }
+  .t-dim { color: #2a3847; }
+  .t-label { color: #8a9bb0; }
+  .t-value { color: #f0f4f8; }
+  .t-highlight { color: #00e0aa; font-weight: 700; }
+  .t-bar { color: #1c4a35; }
+  .t-bar-fill { color: #00c896; }
+  .blink { animation: blink 1.2s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+  /* cursor blink for typewriter */
+  @keyframes blink-cursor { 0%,100%{border-right:2px solid #00c896} 50%{border-right:2px solid transparent} }
+  .cursor { display:inline-block; border-right:2px solid #00c896; animation: blink-cursor 1s step-end infinite; margin-right: -2px; }
+
+  /* scanning line effect */
+  @keyframes scan { 0%{transform:translateY(-100%)} 100%{transform:translateY(100%)} }
+  .scan-line {
+    position:absolute; left:0; right:0; height:30px;
+    background:linear-gradient(to bottom,transparent,rgba(0,200,150,0.04),transparent);
+    animation: scan 3s linear infinite; pointer-events:none;
+  }
+  .term-body { position:relative; overflow:hidden; }
+</style>
+
+<div class="demo-grid">
+
+  <!-- DEMO 1: ESP Health Monitor -->
+  <div class="terminal-wrap" id="esp-demo">
+    <div class="term-header">
+      <div class="term-dot red"></div>
+      <div class="term-dot amber"></div>
+      <div class="term-dot green"></div>
+      <div class="term-title">ESP HEALTH MONITOR — ZLF-12</div>
+    </div>
+    <div class="term-body" id="esp-terminal">
+      <div id="esp-lines"></div>
+    </div>
+  </div>
+
+  <!-- DEMO 2: PTW Validator -->
+  <div class="terminal-wrap" id="ptw-demo">
+    <div class="term-header">
+      <div class="term-dot red"></div>
+      <div class="term-dot amber"></div>
+      <div class="term-dot green"></div>
+      <div class="term-title">PTW VALIDATOR — PTW-2026-0892</div>
+    </div>
+    <div class="term-body" id="ptw-terminal">
+      <div id="ptw-lines"></div>
+    </div>
+  </div>
+
+  <!-- DEMO 3: Pipeline Leak Detection -->
+  <div class="terminal-wrap" id="leak-demo">
+    <div class="term-header">
+      <div class="term-dot red"></div>
+      <div class="term-dot amber"></div>
+      <div class="term-dot green"></div>
+      <div class="term-title">LEAK DETECTION — PL-001 km 48</div>
+    </div>
+    <div class="term-body" id="leak-terminal">
+      <div id="leak-lines"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────────
+// DEMO 1: ESP Health Monitor — ZLF-12
+// ─────────────────────────────────────────────────────────────────
+const ESP_LINES = [
+  { text: '> wf-agent esp-health --well ZLF-12 --mode monitor', cls: 't-cmd', delay: 0 },
+  { text: 'Connecting to SCADA feed... OK (Pason WELLVIEW)', cls: 't-ok', delay: 400 },
+  { text: 'Motor: GE Redwood 550HP / 1000V | FLA: 960A', cls: 't-label', delay: 700 },
+  { text: 'Baseline: 38.2A | Operating hours: 11,247', cls: 't-dim', delay: 900 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 1100 },
+  { text: 'MOTOR CURRENT   45.1A  [+18.0%]  ⚠ WARNING', cls: 't-warn', delay: 1400 },
+  { text: 'MOTOR TEMP      77°C  [+9°C]    ⚠ WARNING', cls: 't-warn', delay: 1600 },
+  { text: 'VIBRATION      3.4mm/s[+79%]    ⚠ WARNING', cls: 't-warn', delay: 1800 },
+  { text: 'PUMP EFFICIENCY 54%   [-14%]    ⚠ WARNING', cls: 't-warn', delay: 2000 },
+  { text: 'HEALTH SCORE    31/100  [YELLOW → RED]', cls: 't-alert', delay: 2200 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 2400 },
+  { text: 'FAILURE SIGNATURE ANALYSIS:', cls: 't-label', delay: 2600 },
+  { text: '  Motor winding degradation — confidence 87%', cls: 't-warn', delay: 2800 },
+  { text: '  Bearing wear (secondary) — confidence 64%', cls: 't-warn', delay: 3000 },
+  { text: '  Sand abrasion — confidence 58%', cls: 't-warn', delay: 3200 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 3400 },
+  { text: 'PREDICTION: Failure within 5–7 days', cls: 't-highlight', delay: 3600 },
+  { text: 'RECOMMENDATION: Emergency pull within 48 hrs', cls: 't-alert', delay: 3800 },
+  { text: '  Cost delta: $95K (planned vs emergency)', cls: 't-dim', delay: 4000 },
+  { text: '  Production loss: 9,800 bbl (7-day downtime)', cls: 't-dim', delay: 4200 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 4400 },
+  { text: '> Alert sent: ops@alberta-petroleum.ca', cls: 't-ok', delay: 4600 },
+  { text: '> Ticket created: WO-2026-0899 [PRIORITY 1]', cls: 't-ok', delay: 4800 },
+  { text: '<span class="blink">_</span>', cls: '', delay: 5000, html: true },
+];
+
+function animateLines(elId, lines) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  el.innerHTML = '';
+  lines.forEach(function(line) {
+    setTimeout(function() {
+      var span = document.createElement('div');
+      if (line.html) {
+        span.innerHTML = line.text;
+      } else {
+        span.className = line.cls;
+        span.textContent = line.text;
+      }
+      el.appendChild(span);
+      el.scrollTop = el.scrollHeight;
+    }, line.delay);
+  });
+}
+
+// ─────────────────────────────────────────────────────────────────
+// DEMO 2: PTW Validator — Hot Work Permit
+// ─────────────────────────────────────────────────────────────────
+const PTW_LINES = [
+  { text: '> wf-agent ptw-validate --permit PTW-2026-0892', cls: 't-cmd', delay: 0 },
+  { text: 'Validating hot work request at ZLF-12 wellhead...', cls: 't-label', delay: 300 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 500 },
+  { text: 'CHECK 1: Atmosphere (GT-003 nr. wellhead)', cls: 't-label', delay: 700 },
+  { text: '  LEL:    0.5%  [THRESHOLD <10%]       ✓ PASS', cls: 't-ok', delay: 1000 },
+  { text: '  H\u2082S:  0 ppm  [THRESHOLD <10 ppm]   ✓ PASS', cls: 't-ok', delay: 1200 },
+  { text: '  O\u2082:   20.9% [THRESHOLD 19.5–23.5%] ✓ PASS', cls: 't-ok', delay: 1400 },
+  { text: 'CHECK 2: Personnel exclusion zone (100 ft)', cls: 't-label', delay: 1600 },
+  { text: '  Personnel in zone: 0                       ✓ PASS', cls: 't-ok', delay: 1900 },
+  { text: 'CHECK 3: Fire watch (2 personnel assigned)', cls: 't-label', delay: 2100 },
+  { text: '  Fire watch: M. Chen, R. Patel              ✓ PASS', cls: 't-ok', delay: 2400 },
+  { text: 'CHECK 4: Fire extinguisher (within 30 ft)', cls: 't-label', delay: 2600 },
+  { text: '  Extinguisher: 2\u00d710 lb ABC @ 18 ft         ✓ PASS', cls: 't-ok', delay: 2900 },
+  { text: 'CHECK 5: Active conflicts (adjacent permits)', cls: 't-label', delay: 3100 },
+  { text: '  PTW-0893 [Confined Space T-04]: CLEAR       ✓ PASS', cls: 't-ok', delay: 3400 },
+  { text: 'CHECK 6: Gas detector network status', cls: 't-label', delay: 3600 },
+  { text: '  GT-003: CALIBRATED 2026-04-15  \u2713 ONLINE', cls: 't-ok', delay: 3900 },
+  { text: '  GT-006: CALIBRATED 2026-04-15  \u2713 ONLINE', cls: 't-ok', delay: 4100 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 4300 },
+  { text: 'DECISION: \u250C\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500', cls: 't-highlight', delay: 4500 },
+  { text: 'PERMIT APPROVED — ISSUED BY: R. Chen @ 05:50', cls: 't-highlight', delay: 4600 },
+  { text: 'Expiry: 18:00 today | Fire watch: 30 min post-work', cls: 't-dim', delay: 4800 },
+  { text: '> Continuous monitoring active (GT-003 live feed)', cls: 't-ok', delay: 5000 },
+  { text: '<span class="blink">_</span>', cls: '', delay: 5200, html: true },
+];
+
+// ─────────────────────────────────────────────────────────────────
+// DEMO 3: Pipeline Leak Detection — PL-001
+// ─────────────────────────────────────────────────────────────────
+const LEAK_LINES = [
+  { text: '> wf-agent leak-detect --pipeline PL-001', cls: 't-cmd', delay: 0 },
+  { text: 'SCADA mass balance: active | DAS: active | DTS: active', cls: 't-label', delay: 300 },
+  { text: 'Throughput: 38,050 BOPD | Tolerance: 0.5% (190 BOPD)', cls: 't-dim', delay: 500 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 700 },
+  { text: '14:32:07 — Mass imbalance detected: -60 BOPD', cls: 't-warn', delay: 1000 },
+  { text: '14:32:07 — Pressure drop: -4 psi / upstream', cls: 't-warn', delay: 1200 },
+  { text: '14:32:08 — DAS event @ km 47.2: +12 dB above baseline', cls: 't-warn', delay: 1400 },
+  { text: '14:32:09 — DTS thermal anomaly @ km 48.1: +4.2\u00b0C', cls: 't-warn', delay: 1600 },
+  { text: '14:32:10 — CONFIDENCE: SCADA 52% | DAS 78% | DTS 79%', cls: 't-warn', delay: 1800 },
+  { text: '14:32:10 — Combined multi-sensor: 94%\u2713', cls: 't-alert', delay: 2000 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 2200 },
+  { text: 'ACTION: \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500', cls: 't-alert', delay: 2400 },
+  { text: 'ALERT: Pipeline isolation recommended', cls: 't-alert', delay: 2500 },
+  { text: '  Location: km 48.1 \u00b1 0.8 km (SCADA + DAS + DTS)', cls: 't-value', delay: 2700 },
+  { text: '  Est. flow rate: 55–70 BPH (0.5–0.7% nominal)', cls: 't-value', delay: 2900 },
+  { text: '  Block valves: BV-002 (km 25) | BV-003 (km 50)', cls: 't-value', delay: 3100 },
+  { text: '  Estimated spill (14:32–14:48): 12–19 barrels', cls: 't-value', delay: 3300 },
+  { text: '────────────────────────────────────────────', cls: 't-dim', delay: 3500 },
+  { text: '14:32:14 — > ISO-LINE BV-002@km25 [REMOTE] CLOSE', cls: 't-highlight', delay: 3700 },
+  { text: '14:32:16 — > ISO-LINE BV-003@km50 [REMOTE] CLOSE', cls: 't-highlight', delay: 3900 },
+  { text: '14:32:17 — > Pipeline PL-001 (km 25–50) ISOLATED', cls: 't-ok', delay: 4100 },
+  { text: '14:32:18 — > AER NOTIFICATION: Filed (incident# 2026-4892)', cls: 't-ok', delay: 4300 },
+  { text: '14:32:19 — > ENV RESPONSE: Dispatched', cls: 't-ok', delay: 4500 },
+  { text: '<span class="blink">_</span>', cls: '', delay: 4700, html: true },
+];
+
+// ─────────────────────────────────────────────────────────────────
+// Start animations on scroll-into-view
+// ─────────────────────────────────────────────────────────────────
+var espStarted = false, ptwStarted = false, leakStarted = false;
+
+function startDemo(id, lines, startedFlag) {
+  if (startedFlag) return;
+  startedFlag[0] = true;
+  animateLines(id, lines);
+}
+
+var espObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) startDemo('esp-lines', ESP_LINES, [espStarted = true]);
+  });
+}, { threshold: 0.3 });
+
+var ptwObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) startDemo('ptw-lines', PTW_LINES, [ptwStarted = true]);
+  });
+}, { threshold: 0.3 });
+
+var leakObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) startDemo('leak-lines', LEAK_LINES, [leakStarted = true]);
+  });
+}, { threshold: 0.3 });
+
+setTimeout(function() {
+  espObs.observe(document.getElementById('esp-demo'));
+  ptwObs.observe(document.getElementById('ptw-demo'));
+  leakObs.observe(document.getElementById('leak-demo'));
+}, 500);
+</script>
+
+<!-- REAL SCENARIO NARRATIVE -->
+<style>
+  .scenario-wrap {
+    max-width: 1100px;
+    margin: 0 auto 48px;
+    padding: 0 24px;
+  }
+  .scenario-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .scenario-card {
+    background: #0e1318;
+    border: 1px solid #1c2530;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  .scenario-card .num {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--accent);
+    font-family: 'Courier New', monospace;
+    line-height: 1;
+  }
+  .scenario-card .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .scenario-body {
+    background: #0e1318;
+    border: 1px solid #1c2530;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .scenario-step {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid #1c2530;
+  }
+  .scenario-step:last-child { border-bottom: none; }
+  .step-time {
+    width: 90px;
+    padding: 16px 12px;
+    background: #0a0e13;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    border-right: 1px solid #1c2530;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: horizontal-tb;
+  }
+  .step-content {
+    flex: 1;
+    padding: 14px 18px;
+  }
+  .step-content h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+  }
+  .step-content p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .step-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .badge-agent { background: rgba(0,200,150,0.15); color: var(--accent); }
+  .badge-human { background: rgba(245,166,35,0.15); color: var(--amber); }
+  .badge-system { background: rgba(140,155,176,0.1); color: var(--text-secondary); }
+  .step-agents {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 6px;
+  }
+  .step-agents span {
+    color: var(--accent);
+    font-family: 'Courier New', monospace;
+  }
+  @media (max-width: 700px) {
+    .scenario-header { grid-template-columns: 1fr; }
+    .step-time { width: 70px; font-size: 10px; }
+  }
+</style>
+
+<div class="scenario-wrap">
+  <div style="padding: 0 0 20px;">
+    <div class="section-label">Real Scenario</div>
+    <h2 style="font-size:22px;font-weight:700;margin-bottom:6px;">ZLF-12: 72 Hours From Alert to Work Order</h2>
+    <p style="font-size:13px;color:var(--text-secondary);max-width:600px;">A real event sequence from the Zuluf field — multiple agents working in parallel, each doing their job, escalating only when needed.</p>
+  </div>
+
+  <div class="scenario-header">
+    <div class="scenario-card">
+      <div class="num">11:04</div>
+      <div class="label">First Alert</div>
+    </div>
+    <div class="scenario-card">
+      <div class="num">11:08</div>
+      <div class="label">Alert Routed</div>
+    </div>
+    <div class="scenario-card">
+      <div class="num">14:32</div>
+      <div class="label">Work Order Issued</div>
+    </div>
+  </div>
+
+  <div class="scenario-body">
+    <div class="scenario-step">
+      <div class="step-time">11:04 MDT</div>
+      <div class="step-content">
+        <span class="step-badge badge-agent">ESP HEALTH AGENT</span>
+        <h4>Motor current exceeds warning threshold (+15%)</h4>
+        <p>Sensor feed from Pason WELLVIEW shows ZLF-12 motor at 45.1A — 18% above baseline. Health score drops to 31/100. Agent calculates 71% failure probability within 7 days.</p>
+        <div class="step-agents">Agent: <span>esp-health@zlf-12</span> | Action: Alert generated, dashboard updated</div>
+      </div>
+    </div>
+    <div class="scenario-step">
+      <div class="step-time">11:06 MDT</div>
+      <div class="step-content">
+        <span class="step-badge badge-agent">FIELD ORCHESTRATOR</span>
+        <h4>Cross-agent correlation: Bearing wear signature confirmed</h4>
+        <p>Vibration spectrum analysis confirms 2.1x line frequency — bearing raceway pitting. Pump efficiency declining. Escalation to RED status. Maintenance planner notified automatically.</p>
+        <div class="step-agents">Agent: <span>field-orchestrator@zlf-12</span> | Action: Escalation triggered</div>
+      </div>
+    </div>
+    <div class="scenario-step">
+      <div class="step-time">11:08 MDT</div>
+      <div class="step-content">
+        <span class="step-badge badge-system">EMAIL + SMS</span>
+        <h4>Operations manager notified: "ZLF-12 RED — Emergency pull recommended"</h4>
+        <p>Automated alert sent with failure probability, cost comparison (planned $85K vs emergency $180K), and recommended pull window. Operations manager reviews and approves work order.</p>
+        <div class="step-agents">Human: <span>ops.manager@alberta-petroleum.ca</span> | Action: Approved</div>
+      </div>
+    </div>
+    <div class="scenario-step">
+      <div class="step-time">14:32 MDT</div>
+      <div class="step-content">
+        <span class="step-badge badge-agent">SUPPLY CHAIN AGENT</span>
+        <h4>Replacement ESP motor sourced — 2 units in stock</h4>
+        <p>Supply chain agent confirms inventory: 1x GE Redwood 550HP motor available. Rig scheduling coordinated. Work order WO-2026-0899 created in SAP. Contractor dispatched.</p>
+        <div class="step-agents">Agent: <span>supply-chain@zlf-12</span> | Action: Parts confirmed, rig mobilized</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 20px; padding: 16px 18px; background: rgba(0,200,150,0.06); border: 1px solid rgba(0,200,150,0.2); border-radius: 8px; font-size: 12px; color: var(--text-secondary); line-height: 1.7;">
+    <span style="color: var(--accent); font-weight: 600;">Key difference vs. manual process:</span>
+    The ESP agent flagged the issue at +15% motor current deviation. In a manual workflow, this would typically be noticed at +30% (when a technician is reviewing logs). The 72-hour early warning window translated into $95,000 in cost avoidance — planned pull vs. emergency pull — and 5 fewer days of downtime.
+  </div>
+</div>
 <!-- CTA -->
 <div class="cta-section">
   <h2>Ready to Turn AI Pilots Into<br>Production Operations?</h2>
