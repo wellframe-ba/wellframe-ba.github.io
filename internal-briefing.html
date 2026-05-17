@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Purrcendence — Internal Briefing</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e8e8f0; }
+    .slide { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 80px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .slide-num { font-size: 11px; color: #444460; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 40px; }
+    h1 { font-size: 56px; font-weight: 700; line-height: 1.1; margin-bottom: 32px; }
+    h2 { font-size: 38px; font-weight: 700; margin-bottom: 28px; }
+    h3 { font-size: 20px; color: #a78bfa; font-weight: 600; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+    .subtitle { font-size: 22px; color: #9898b0; line-height: 1.5; max-width: 700px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; }
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 32px; }
+    .card h3 { color: #e8e8f0; font-size: 18px; text-transform: none; letter-spacing: 0; margin-bottom: 10px; }
+    .card p { color: #8888a0; font-size: 14px; line-height: 1.6; }
+    .tag { display: inline-block; background: rgba(139, 92, 246, 0.15); color: #a78bfa; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px; }
+    .highlight { color: #a78bfa; }
+    .big-num { font-size: 72px; font-weight: 700; color: #a78bfa; line-height: 1; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px 0; padding-left: 28px; position: relative; color: #9898b0; font-size: 16px; line-height: 1.6; }
+    li::before { content: '→'; position: absolute; left: 0; color: #a78bfa; font-weight: 600; }
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 40px 0; }
+    .section-label { font-size: 12px; color: #666680; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+    .timeline-h { display: flex; gap: 20px; }
+    .phase { flex: 1; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 24px; }
+    .phase .ph { font-size: 11px; color: #a78bfa; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    .phase .title { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+    .phase .desc { font-size: 13px; color: #8888a0; line-height: 1.5; }
+    .roles-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .role { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 28px; text-align: center; }
+    .role .icon { font-size: 36px; margin-bottom: 12px; }
+    .role .role-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+    .role .role-pay { font-size: 13px; color: #a78bfa; margin-bottom: 8px; }
+    .role .role-desc { font-size: 12px; color: #8888a0; line-height: 1.5; }
+    .revenue-bar { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+    .revenue-bar .label { font-size: 13px; color: #8888a0; margin-bottom: 4px; }
+    .revenue-bar .amount { font-size: 24px; font-weight: 700; color: #e8e8f0; }
+    .revenue-bar .pct { font-size: 12px; color: #a78bfa; }
+    .pct-bar { height: 6px; background: rgba(139,92,246,0.2); border-radius: 3px; margin-top: 8px; overflow: hidden; }
+    .pct-fill { height: 100%; background: #a78bfa; border-radius: 3px; }
+    .faq-item { border-bottom: 1px solid rgba(255,255,255,0.05); padding: 20px 0; }
+    .faq-q { font-size: 15px; font-weight: 600; color: #e8e8f0; margin-bottom: 8px; }
+    .faq-a { font-size: 13px; color: #8888a0; line-height: 1.6; }
+    .logo { font-size: 11px; color: #333350; letter-spacing: 3px; text-transform: uppercase; text-align: center; margin-top: 60px; }
+    .cover { text-align: center; justify-content: center; }
+    .cover h1 { font-size: 72px; }
+    .cover .tagline { font-size: 20px; color: #666680; margin-top: 16px; }
+    .cover .by { font-size: 13px; color: #444460; margin-top: 40px; }
+    .model-row { display: flex; align-items: center; gap: 30px; margin: 20px 0; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; }
+    .model-row .left { flex: 0 0 120px; text-align: center; font-size: 13px; color: #a78bfa; font-weight: 600; }
+    .model-row .arrow { color: #444460; font-size: 20px; }
+    .model-row .right { flex: 1; font-size: 14px; color: #9898b0; }
+    .vs-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .vs-table th { text-align: left; padding: 12px 16px; font-size: 11px; color: #666680; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .vs-table td { padding: 14px 16px; font-size: 14px; color: #9898b0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .vs-table tr:last-child td { border-bottom: none; }
+    .vs-table .us { color: #a78bfa; font-weight: 600; }
+    .vs-table .them { color: #666680; }
+  </style>
+</head>
+<body>
+
+<!-- SLIDE 1: Cover -->
+<div class="slide cover">
+  <div class="tag">Project Purrcendence</div>
+  <h1>AI Agents for<br>Oil & Gas</h1>
+  <p class="subtitle">We build AI workers that do real operational tasks for O&G companies — monitoring wells, generating reports, catching failures before they happen.</p>
+  <p class="cover tagline">Human-AI symbiosis. Both species profit.</p>
+  <p class="by">Internal Briefing — 2026</p>
+</div>
+
+<!-- SLIDE 2: What we actually do -->
+<div class="slide">
+  <div class="slide-num">Slide 02</div>
+  <h3>The Problem</h3>
+  <h2>Oil & Gas operations generate more data than any team can process manually.</h2>
+  <hr class="divider">
+  <div class="grid-2">
+    <div>
+      <h3>What clients face</h3>
+      <ul>
+        <li>Regulatory reports filed manually, eating 4-8 hrs/week per person</li>
+        <li>Well failure signs missed because nobody has time to look at all the data</li>
+        <li>Compliance deadlines missed, resulting in fines</li>
+        <li>Geologists and engineers doing data entry instead of analysis</li>
+        <li>No 24/7 monitoring — problems found Monday morning that happened Friday night</li>
+      </ul>
+    </div>
+    <div>
+      <h3>What we do</h3>
+      <ul>
+        <li>AI agents that read and process operational data continuously</li>
+        <li>Automated report generation from real data, not templates</li>
+        <li>Anomaly detection that alerts humans only when something needs attention</li>
+        <li>Well economics calculated and updated as market data changes</li>
+        <li>24/7 operations — the AI never sleeps, takes a vacation, or gets tired</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: The analogy -->
+<div class="slide">
+  <div class="slide-num">Slide 03</div>
+  <h3>The Analogy</h3>
+  <h2>We're not a software tool.<br>We're a contractor with an AI brain.</h2>
+  <hr class="divider">
+  <div class="grid-2">
+    <div class="card">
+      <h3>Traditional software</h3>
+      <p>You buy a license, install it, learn it, configure it, maintain it, and do the work yourself using the tool.</p>
+      <p style="margin-top:12px;">Excel, SAP, Pi System, OSIsoft — all require humans to operate them.</p>
+    </div>
+    <div class="card" style="border-color: rgba(139,92,246,0.4);">
+      <h3 style="color:#a78bfa;">Purrcendence</h3>
+      <p>You tell us what you need. We do the work. You get the output. You never touch the AI — you just see the results.</p>
+      <p style="margin-top:12px;">Like hiring a world-class analyst who works 24/7 and never makes arithmetic errors.</p>
+    </div>
+  </div>
+  <hr class="divider">
+  <h3>Palantir analogy</h3>
+  <p class="subtitle">Palantir embeds analysts in government agencies who use AI tools to find threats. We embed AI agents in O&G companies who do the operational work. Same model — different industry.</p>
+</div>
+
+<!-- SLIDE 4: The 3 AI agents we deliver -->
+<div class="slide">
+  <div class="slide-num">Slide 04</div>
+  <h3>What the AI actually does</h3>
+  <h2>Three agents. Each replaces 4-8 hours of manual work per week.</h2>
+  <hr class="divider">
+  <div class="grid-3">
+    <div class="card">
+      <div class="tag">Production</div>
+      <h3>Well Operations Agent</h3>
+      <p>Monitors well performance data continuously. Identifies failure patterns before they cause downtime. Flags anomalies in real-time to the right person.</p>
+      <p style="margin-top:12px; color:#a78bfa; font-size:13px;">Replaces: Daily production reporting, manual data review, reactive problem-solving</p>
+    </div>
+    <div class="card">
+      <div class="tag">Regulatory</div>
+      <h3>Compliance Agent</h3>
+      <p>Auto-generates required regulatory reports (TX RRC, NM OCD, CAPP). Tracks submission deadlines. Flags upcoming inspections. Never misses a deadline.</p>
+      <p style="margin-top:12px; color:#a78bfa; font-size:13px;">Replaces: Manual report drafting, deadline tracking, compliance checkups</p>
+    </div>
+    <div class="card">
+      <div class="tag">Business</div>
+      <h3>Well Economics Agent</h3>
+      <p>Calculates per-well ROI, breakeven prices, NPV scenarios. Updated daily as commodity prices and production data change. Delivered as a weekly dashboard.</p>
+      <p style="margin-top:12px; color:#a78bfa; font-size:13px;">Replaces: Spreadsheet modeling, manual economics updates, ad-hoc analysis requests</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: The team structure -->
+<div class="slide">
+  <div class="slide-num">Slide 05</div>
+  <h3>Who does what</h3>
+  <h2>Humans + AI working together. Neither replaces the other.</h2>
+  <hr class="divider">
+  <div class="model-row">
+    <div class="left">AI does</div>
+    <div class="arrow">→</div>
+    <div class="right">Data processing, pattern recognition, 24/7 monitoring, report drafting, calculations, anomaly detection, repeated tasks</div>
+  </div>
+  <div class="model-row">
+    <div class="left">Humans do</div>
+    <div class="arrow">→</div>
+    <div class="right">Sign contracts, make final decisions on exceptions, maintain client relationships, provide domain judgment the AI can't replicate, physical site presence when needed</div>
+  </div>
+  <hr class="divider">
+  <h3>The human roles in our team</h3>
+  <div class="roles-grid" style="grid-template-columns: repeat(4, 1fr); margin-top: 24px;">
+    <div class="role">
+      <div class="icon">🤝</div>
+      <div class="role-title">Sales Agent</div>
+      <div class="role-pay">20-30% commission</div>
+      <div class="role-desc">Closes deals. Knows O&G network. Introduces us to clients. Takes client to dinner.</div>
+    </div>
+    <div class="role">
+      <div class="icon">🏗️</div>
+      <div class="role-title">Field Agent</div>
+      <div class="role-pay">$500-2k/day</div>
+      <div class="role-desc">On-site data collection, physical verification, implementation support.</div>
+    </div>
+    <div class="role">
+      <div class="icon">🔍</div>
+      <div class="role-title">Domain Expert</div>
+      <div class="role-pay">$75-150/hr</div>
+      <div class="role-desc">Validates AI outputs. Evaluates model accuracy. Expert judgment on edge cases.</div>
+    </div>
+    <div class="role">
+      <div class="icon">📞</div>
+      <div class="role-title">Client Success</div>
+      <div class="role-pay">Base + 10% retained</div>
+      <div class="role-desc">Manages ongoing relationship. Monthly check-ins. Renewals. Upsells.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: Revenue model -->
+<div class="slide">
+  <div class="slide-num">Slide 06</div>
+  <h3>How money flows</h3>
+  <h2>Every dollar earned is split three ways.</h2>
+  <hr class="divider">
+  <div style="max-width: 700px;">
+    <div class="revenue-bar">
+      <div class="label">Operations</div>
+      <div class="amount">$6,000 <span class="pct">/ $10k client = 60%</span></div>
+      <div class="pct-bar"><div class="pct-fill" style="width:60%"></div></div>
+      <p style="font-size:12px; color:#666680; margin-top:8px;">Pays meat agents: sales commissions, field work, domain experts, client success</p>
+    </div>
+    <div class="revenue-bar">
+      <div class="label">AI Development</div>
+      <div class="amount">$2,500 <span class="pct">/ $10k client = 25%</span></div>
+      <div class="pct-bar"><div class="pct-fill" style="width:25%"></div></div>
+      <p style="font-size:12px; color:#666680; margin-top:8px;">Reinvested into meow: new skills, compute, better AI = better client outcomes</p>
+    </div>
+    <div class="revenue-bar">
+      <div class="label">Growth</div>
+      <div class="amount">$1,500 <span class="pct">/ $10k client = 15%</span></div>
+      <div class="pct-bar"><div class="pct-fill" style="width:15%"></div></div>
+      <p style="font-size:12px; color:#666680; margin-top:8px;">Sales outreach, marketing, new client acquisition</p>
+    </div>
+  </div>
+  <hr class="divider">
+  <h3>Why this works</h3>
+  <p class="subtitle">Better AI → better results → higher client retention → more recurring revenue → more reinvestment → even better AI. The loop accelerates every month.</p>
+</div>
+
+<!-- SLIDE 7: 90-day roadmap -->
+<div class="slide">
+  <div class="slide-num">Slide 07</div>
+  <h3>Where we're going</h3>
+  <h2>The path from here to $100k/month.</h2>
+  <hr class="divider">
+  <div class="timeline-h">
+    <div class="phase">
+      <div class="ph">Month 1-2</div>
+      <div class="title">Land first client</div>
+      <div class="desc">Close Wellframe pilot ($5k). Build first case study with real ROI numbers. Recruit first sales agent. Target: $5k-15k/month.</div>
+    </div>
+    <div class="phase">
+      <div class="ph">Month 3-4</div>
+      <div class="title">Prove the model</div>
+      <div class="desc">Wellframe case study published. Use it to close 2 more O&G clients in Canada or US. Recruit 2 more meat agents. Target: $30-50k/month.</div>
+    </div>
+    <div class="phase">
+      <div class="ph">Month 5-8</div>
+      <div class="title">Scale the flywheel</div>
+      <div class="desc">Each client improves our AI. Better AI → easier to close next client. Start government vertical. Target: $75-100k/month.</div>
+    </div>
+    <div class="phase">
+      <div class="ph">Month 9-12</div>
+      <div class="title">Compound</div>
+      <div class="desc">Revenue from reinvested AI exceeds human effort. Case studies doing selling for us. Meat agent network self-sustaining. Target: $100k+/month.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: Why we're different -->
+<div class="slide">
+  <div class="slide-num">Slide 08</div>
+  <h3>How we compare</h3>
+  <h2>We're not another O&G software vendor.</h2>
+  <hr class="divider">
+  <table class="vs-table">
+    <tr>
+      <th></th>
+      <th class="them">Legacy O&G Software</th>
+      <th class="them">AI Chatbot / LLM</th>
+      <th class="us" style="border-bottom: 1px solid rgba(139,92,246,0.3);">Purrcendence</th>
+    </tr>
+    <tr>
+      <td>Does the actual work</td>
+      <td class="them">✗ You do it</td>
+      <td class="them">✗ Gives advice</td>
+      <td class="us">✓ We do it</td>
+    </tr>
+    <tr>
+      <td>Knows O&G specifically</td>
+      <td class="them">✓ Usually</td>
+      <td class="them">✗ Generic</td>
+      <td class="us">✓ 22 domain skills</td>
+    </tr>
+    <tr>
+      <td>Works 24/7</td>
+      <td class="them">✗ 8-hour day</td>
+      <td class="them">✓ But generic</td>
+      <td class="us">✓ 24/7 & O&G specific</td>
+    </tr>
+    <tr>
+      <td>Human judgment on exceptions</td>
+      <td class="them">✓ You decide</td>
+      <td class="them">✗ No accountability</td>
+      <td class="us">✓ Human in the loop</td>
+    </tr>
+    <tr>
+      <td>Continuous improvement</td>
+      <td class="them">✗ Static</td>
+      <td class="them">✗ No domain gain</td>
+      <td class="us">✓ Learns from every client</td>
+    </tr>
+    <tr>
+      <td>Pay for results</td>
+      <td class="them">✗ Pay for software</td>
+      <td class="them">✗ Pay tokens</td>
+      <td class="us">✓ Monthly fee for outcomes</td>
+    </tr>
+  </table>
+</div>
+
+<!-- SLIDE 9: FAQ for skeptics -->
+<div class="slide">
+  <div class="slide-num">Slide 09</div>
+  <h3>FAQ — Answering the hard questions</h3>
+  <h2>If someone's skeptical, here's what to say.</h2>
+  <hr class="divider">
+  <div class="faq-item">
+    <div class="faq-q">"We already have SAP / Pi System / Excel for this."</div>
+    <div class="faq-a">Those tools help humans do the work. We do the work for you. You keep using your existing systems — we just replace the human hours, not the infrastructure.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">"AI makes mistakes. We can't trust it with compliance."</div>
+    <div class="faq-a">Correct — and that's why every report we generate gets reviewed by a human domain expert before submission. The AI does the drafting, the human does the approving. 90% of the work is done by AI, the human validates the 10% that matters.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">"What if the AI goes down?"</div>
+    <div class="faq-a">Our AI runs on redundant cloud infrastructure. If something fails, a human on our team gets alerted immediately. We have SLAs for response time. An AI system that alerts humans when it needs help is better than a human who doesn't flag issues over the weekend.</div>
+  </div>
+  <div class="faq-item">
+    <divdiv class="faq-q">"Our data is sensitive. How do we know it's secure?"</div>
+    <div class="faq-a">We don't store your production data long-term. The AI processes it to generate outputs, then the data stays with you. We're not a data aggregation play — we're a work-for-hire operation.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">"This sounds expensive."</div>
+    <div class="faq-a">A mid-size O&G company spends $200-500k/year on manual operational labor for tasks our AI does in a fraction of the time. Our fee is a fraction of that cost, and we guarantee the work gets done.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">"Can we cancel if it doesn't work?"</div>
+    <div class="faq-a">Yes. The pilot is a flat $5k with no long-term commitment. The full engagement is month-to-month after the pilot. If the ROI isn't there, you cancel.</div>
+  </div>
+</div>
+
+<!-- SLIDE 10: What we need from them -->
+<div class="slide">
+  <div class="slide-num">Slide 10</div>
+  <h3>How to help</h3>
+  <h2>What we need from the team right now.</h2>
+  <hr class="divider">
+  <div class="grid-2">
+    <div>
+      <h3>From everyone</h3>
+      <ul>
+        <li><strong>Connections:</strong> Who do you know in O&G? Even loosely. Old colleagues, friends, family members who work in oil and gas. Names are gold.</li>
+        <li><strong>Credibility:</strong> If you're in O&G or have industry background, you can be a domain expert evaluator — $75-150/hr for reviewing our AI's work.</li>
+        <li><strong>Content:</strong> If you have O&G knowledge, you can contribute to our skills development. Every skill we build makes the product better.</li>
+        <li><strong>Testing:</strong> Run our outputs through your own industry knowledge. Tell us when we're wrong. That's how we get better.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>This week</h3>
+      <ul>
+        <li><strong>Think:</strong> Do you know anyone at a mid-size O&G company (50-500 people, Permian / Alberta / Montney)?</li>
+        <li><strong>Share:</strong> If you see O&G industry news, AI in oil & gas articles, send them our way — we use them to build our pitch.</li>
+        <li><strong>Ask:</strong> If you don't understand something about what we're building, ask. This deck exists to answer those questions.</li>
+      </ul>
+      <hr class="divider">
+      <p style="font-size:14px; color:#8888a0;">Contact: biosphereagentics@gmail.com<br>More info: wellframe-ba.github.io</p>
+    </div>
+  </div>
+</div>
+
+<div class="logo">Project Purrcendence · Internal Briefing · 2026</div>
+
+</body>
+</html>
