@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wellframe — AI Agents for Oil & Gas</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#080c10;color:#f0f4f8;overflow:hidden;user-select:none}
+.slide{position:absolute;top:0;left:0;width:1920px;height:1080px;padding:80px;display:none;flex-direction:column;background:#080c10}
+.slide.active{display:flex}
+.nav{position:fixed;bottom:40px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:24px;z-index:100}
+.nav button{background:#0e1318;border:1px solid #1c2530;color:#f0f4f8;padding:12px 24px;font-family:Inter;font-size:14px;font-weight:500;cursor:pointer;border-radius:4px;transition:all .2s}
+.nav button:hover{background:#1c2530;border-color:#00c896}
+.counter{font-size:14px;color:#8a9bb0;font-weight:500;min-width:60px;text-align:center}
+.progress{position:fixed;top:0;left:0;height:3px;background:#00c896;transition:width .3s}
+.accent{color:#00c896}
+.amber{color:#f5a623}
+.dim{color:#8a9bb0}
+
+/* SLIDE 1 — TITLE */
+.title-slide{justify-content:center;align-items:center;text-align:center}
+.title-slide h1{font-size:72px;font-weight:800;line-height:1.1;margin-bottom:24px;letter-spacing:-2px}
+.title-slide h1 span{display:block;font-size:48px;font-weight:400;color:#8a9bb0;margin-top:16px}
+.title-slide .logo{font-size:32px;font-weight:700;letter-spacing:4px;color:#00c896;margin-bottom:60px}
+.title-slide .tagline{font-size:24px;color:#8a9bb0;font-weight:300;max-width:700px}
+
+/* SLIDE 2 — PROBLEM */
+.slide h2{font-size:64px;font-weight:700;margin-bottom:48px;letter-spacing:-1px}
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;flex:1}
+.problem-card{background:#0e1318;border:1px solid #1c2530;border-radius:8px;padding:48px}
+.problem-card h3{font-size:28px;font-weight:600;color:#00c896;margin-bottom:16px}
+.problem-card p{font-size:22px;color:#8a9bb0;line-height:1.5}
+
+/* SLIDE 3 — SOLUTION */
+.slide p{font-size:28px;color:#8a9bb0;line-height:1.6;max-width:900px}
+.big-stat{display:flex;flex-direction:column;align-items:center;margin-top:40px}
+.big-stat .number{font-size:180px;font-weight:800;color:#00c896;line-height:1}
+.big-stat .label{font-size:24px;color:#8a9bb0;margin-top:16px}
+
+/* SLIDE 4 — SERVICES */
+.services-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;flex:1}
+.service-card{background:#0e1318;border:1px solid #1c2530;border-radius:8px;padding:40px}
+.service-card h3{font-size:24px;font-weight:600;color:#00c896;margin-bottom:12px}
+.service-card p{font-size:18px;color:#8a9bb0}
+
+/* SLIDE 5 — HOW IT WORKS */
+.steps{display:flex;gap:48px;flex:1;align-items:stretch}
+.step{flex:1;background:#0e1318;border:1px solid #1c2530;border-radius:8px;padding:48px;display:flex;flex-direction:column}
+.step .num{font-size:80px;font-weight:800;color:#1c2530;margin-bottom:24px}
+.step h3{font-size:28px;font-weight:600;margin-bottom:16px}
+.step p{font-size:18px;color:#8a9bb0;flex:1}
+.step-arrow{font-size:48px;color:#00c896;display:flex;align-items:center}
+
+/* SLIDE 6 — WHY WELLFRAME */
+.diff-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;flex:1}
+.diff-card{background:#0e1318;border:1px solid #1c2530;border-radius:8px;padding:40px;text-align:center}
+.diff-card .icon{font-size:48px;color:#00c896;margin-bottom:24px}
+.diff-card h3{font-size:24px;font-weight:600;margin-bottom:12px}
+.diff-card p{font-size:16px;color:#8a9bb0}
+
+/* SLIDE 7 — CASE STUDY */
+.case-preview{background:#0e1318;border:1px solid #1c2530;border-radius:8px;padding:60px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.case-preview .label{font-size:16px;color:#f5a623;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px}
+.case-preview h3{font-size:48px;font-weight:700;margin-bottom:32px}
+.metric-row{display:flex;align-items:baseline;gap:16px;margin-bottom:20px}
+.metric-row .val{font-size:56px;font-weight:700;color:#00c896}
+.metric-row .desc{font-size:20px;color:#8a9bb0}
+
+/* SLIDE 8 — SOCIAL PROOF */
+.logos-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;margin-bottom:60px}
+.logo-placeholder{background:#0e1318;border:1px solid #1c2530;border-radius:8px;height:100px;display:flex;align-items:center;justify-content:center;color:#8a9bb0;font-size:18px;font-weight:500}
+.trust-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.trust-item{background:#0e1318;border:1px solid #1c2530;border-radius:8px;padding:40px}
+.trust-item h4{font-size:22px;font-weight:600;color:#00c896;margin-bottom:12px}
+.trust-item p{font-size:18px;color:#8a9bb0}
+
+/* SLIDE 9 — PRICING */
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;flex:1}
+.price-card{background:#0e1318;border:1px solid #1c2530;border-radius:8px;padding:48px;display:flex;flex-direction:column}
+.price-card.featured{border-color:#00c896}
+.price-card h3{font-size:24px;font-weight:600;margin-bottom:8px}
+.price-card .price{font-size:56px;font-weight:800;color:#00c896;margin-bottom:32px}
+.price-card ul{list-style:none;flex:1}
+.price-card li{font-size:18px;color:#8a9bb0;padding:8px 0;border-bottom:1px solid #1c2530}
+.price-card li:last-child{border:none}
+.sub{font-size:24px;font-weight:400;color:#8a9bb0}
+
+/* SLIDE 10 — CTA */
+.cta-slide{justify-content:center;align-items:center;text-align:center}
+.cta-slide h2{font-size:64px;font-weight:700;margin-bottom:32px}
+.cta-slide p{font-size:24px;color:#8a9bb0;margin-bottom:48px}
+.cta-btn{display:inline-block;background:#00c896;color:#080c10;font-size:20px;font-weight:700;padding:20px 48px;border-radius:4px;text-decoration:none}
+.contact-info{font-size:20px;color:#8a9bb0;margin-top:48px}
+.contact-info span{margin:0 24px}
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- SLIDE 1: TITLE -->
+<div class="slide title-slide active">
+  <div class="logo">WELLFRAME</div>
+  <h1>AI Agents for Oil &amp; Gas<br><span>From Data to Decisions</span></h1>
+  <p class="tagline">Autonomous AI agents that understand your data, your operations, and your industry — working 24/7 across your entire organization.</p>
+</div>
+
+<!-- SLIDE 2: PROBLEM -->
+<div class="slide">
+  <h2>The Problem</h2>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <h3>Data Overload</h3>
+      <p>Your teams are drowning in seismic surveys, well logs, production reports, and market data — with no efficient way to process it all in real time.</p>
+    </div>
+    <div class="problem-card">
+      <h3>Manual Processes</h3>
+      <p>Engineers spend 40% of their time transcribing, reformatting, and moving data between systems instead of analyzing it.</p>
+    </div>
+    <div class="problem-card">
+      <h3>Slow Turnaround</h3>
+      <p>Critical decisions — from drilling plans to inventory orders — wait days for reports that should take minutes.</p>
+    </div>
+    <div class="problem-card">
+      <h3>Siloed Systems</h3>
+      <p>Geology, operations, supply chain, and finance all have separate data stores. Cross-functional insight requires manual reconciliation.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: SOLUTION -->
+<div class="slide">
+  <h2>Our Solution</h2>
+  <p>An AI agent workforce purpose-built for Oil &amp; Gas — 24/7, multi-model, context-aware, and fully aligned with your domain expertise and operational requirements.</p>
+  <div class="big-stat">
+    <div class="number accent">24/7</div>
+    <div class="label">Autonomous operation across all shifts and time zones</div>
+  </div>
+</div>
+
+<!-- SLIDE 4: WHAT WE BUILD -->
+<div class="slide">
+  <h2>What We Build</h2>
+  <div class="services-grid">
+    <div class="service-card">
+      <h3>Exploration &amp; Geology</h3>
+      <p>AI agents that analyze seismic datasets, interpret well logs, identify prospects, and accelerate exploration cycles — all while maintaining geological context.</p>
+    </div>
+    <div class="service-card">
+      <h3>Production Operations</h3>
+      <p>Real-time monitoring agents that track well performance, detect anomalies before they become failures, and optimize production across your portfolio.</p>
+    </div>
+    <div class="service-card">
+      <h3>Supply Chain &amp; Trading</h3>
+      <p>Agents that manage inventory optimization, demand forecasting, logistics coordination, and market intelligence — connecting operations to commercial decisions.</p>
+    </div>
+    <div class="service-card">
+      <h3>HSE &amp; Compliance</h3>
+      <p>Health, Safety, and Environment agents that automate compliance monitoring, incident reporting, regulatory submissions, and audit readiness.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: HOW IT WORKS -->
+<div class="slide">
+  <h2>How It Works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="num">01</div>
+      <h3>Connect</h3>
+      <p>We integrate with your existing data sources — LIMS, SCADA, ERP, cloud storage, and industry-specific platforms. No rip-and-replace required.</p>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step">
+      <div class="num">02</div>
+      <h3>Configure</h3>
+      <p>Domain experts work alongside your team to define agent behaviors, decision rules, escalation paths, and performance benchmarks tailored to your operations.</p>
+    </div>
+    <div class="step-arrow">→</div>
+    <div class="step">
+      <div class="num">03</div>
+      <h3>Deploy</h3>
+      <p>Agents go live with continuous monitoring, monthly performance reviews, and iterative improvements. You see results in the first 90 days.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: WHY WELLFRAME -->
+<div class="slide">
+  <h2>Why Wellframe</h2>
+  <div class="diff-grid">
+    <div class="diff-card">
+      <div class="icon">&#9670;</div>
+      <h3>Oil &amp; Gas Native</h3>
+      <p>Our team has decades of combined experience in geology, drilling, production operations, and energy trading. We speak your language.</p>
+    </div>
+    <div class="diff-card">
+      <div class="icon">&#9670;</div>
+      <h3>Enterprise-Grade AI</h3>
+      <p>Multi-model agent architecture built for the operational complexity and data sensitivity of energy companies — not generic SaaS automation.</p>
+    </div>
+    <div class="diff-card">
+      <div class="icon">&#9670;</div>
+      <h3>Outcome-Focused</h3>
+      <p>We measure success by your metrics: uptime, throughput, compliance rates, and cost reduction — not by hours logged or tickets closed.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: CASE STUDY PREVIEW -->
+<div class="slide">
+  <h2>Case Study Preview</h2>
+  <div class="case-preview">
+    <div class="label">Major Permian Basin Operator</div>
+    <h3>40% Reduction in Reporting Time</h3>
+    <div class="metric-row">
+      <div class="val accent">40%</div>
+      <div class="desc">faster reporting across 12 rigs</div>
+    </div>
+    <div class="metric-row">
+      <div class="val accent">3x</div>
+      <div class="desc">improvement in data processing speed</div>
+    </div>
+    <div class="metric-row">
+      <div class="val accent">2 wks</div>
+      <div class="desc">from kickoff to first agents live</div>
+    </div>
+    <div class="metric-row">
+      <div class="val accent">$2.4M</div>
+      <div class="desc">annual cost savings in reporting operations</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: SOCIAL PROOF -->
+<div class="slide">
+  <h2>Trusted by Energy Leaders</h2>
+  <div class="logos-grid">
+    <div class="logo-placeholder">Operator Logo A</div>
+    <div class="logo-placeholder">Operator Logo B</div>
+    <div class="logo-placeholder">Operator Logo C</div>
+    <div class="logo-placeholder">Operator Logo D</div>
+  </div>
+  <div class="trust-grid">
+    <div class="trust-item">
+      <h4>Industry Certifications</h4>
+      <p>ISO 27001 certified. SOC 2 Type II compliant. Full data sovereignty — your data never leaves your environment.</p>
+    </div>
+    <div class="trust-item">
+      <h4>Team Background</h4>
+      <p>Former engineers and scientists from Schlumberger, Halliburton, Chevron, and Shell — with deep domain expertise in AI and energy operations.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: PRICING -->
+<div class="slide">
+  <h2>Pricing Tiers</h2>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Pilot</h3>
+      <div class="price">$15k<span class="sub">/mo</span></div>
+      <ul>
+        <li>1–2 AI agents</li>
+        <li>90-day sprint</li>
+        <li>Defined scope and KPIs</li>
+        <li>Full integration support</li>
+        <li>Results documentation</li>
+      </ul>
+    </div>
+    <div class="price-card featured">
+      <h3>Production</h3>
+      <div class="price">$45k<span class="sub">/mo</span></div>
+      <ul>
+        <li>Full deployment</li>
+        <li>Unlimited agent scaling</li>
+        <li>Dedicated support team</li>
+        <li>Monthly performance reviews</li>
+        <li>Continuous improvement</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <h3>Enterprise</h3>
+      <div class="price" style="color:#f0f4f8">Custom</div>
+      <ul>
+        <li>Multi-site deployment</li>
+        <li>Custom integrations</li>
+        <li>On-site representation</li>
+        <li>SLA guarantees</li>
+        <li>Co-development partnership</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: CTA -->
+<div class="slide cta-slide">
+  <h2>Ready to see AI agents in action?</h2>
+  <p>Book a technical demonstration with our team. No sales pitch — just live agents working on real Oil &amp; Gas scenarios.</p>
+  <a href="#" class="cta-btn">Schedule a Demo</a>
+  <div class="contact-info">
+    <span>info@wellframe.io</span>
+    <span>|</span>
+    <span>wellframe.io</span>
+    <span>|</span>
+    <span>+1 (832) 555-0194</span>
+  </div>
+</div>
+
+<div class="nav">
+  <button onclick="prevSlide()">&#8592; Previous</button>
+  <div class="counter" id="counter">1 / 10</div>
+  <button onclick="nextSlide()">Next &#8594;</button>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+const counter = document.getElementById('counter');
+const progress = document.getElementById('progress');
+
+function showSlide(n) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[n].classList.add('active');
+  counter.textContent = (n + 1) + ' / ' + total;
+  progress.style.width = ((n + 1) / total * 100) + '%';
+}
+
+function nextSlide() {
+  current = (current + 1) % total;
+  showSlide(current);
+}
+
+function prevSlide() {
+  current = (current - 1 + total) % total;
+  showSlide(current);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+showSlide(0);
+</script>
+</body>
+</html>
