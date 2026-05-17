@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI O&G Readiness Assessment — Wellframe Pilot Proposal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0f; color: #e8e8f0; line-height: 1.6; }
+    .container { max-width: 800px; margin: 0 auto; padding: 60px 40px; }
+    .header { text-align: center; margin-bottom: 60px; }
+    .badge { display: inline-block; background: rgba(139, 92, 246, 0.15); border: 1px solid rgba(139, 92, 246, 0.4); color: #a78bfa; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; padding: 6px 16px; border-radius: 20px; margin-bottom: 24px; }
+    h1 { font-size: 36px; font-weight: 700; margin-bottom: 16px; background: linear-gradient(135deg, #e8e8f0, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .subtitle { font-size: 18px; color: #8888a0; max-width: 500px; margin: 0 auto; }
+    .meta { display: flex; justify-content: center; gap: 40px; margin-top: 32px; }
+    .meta-item { text-align: center; }
+    .meta-value { font-size: 20px; font-weight: 600; color: #e8e8f0; }
+    .meta-label { font-size: 12px; color: #666680; text-transform: uppercase; letter-spacing: 1px; }
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 48px 0; }
+    .section { margin-bottom: 48px; }
+    h2 { font-size: 22px; font-weight: 600; margin-bottom: 20px; color: #e8e8f0; display: flex; align-items: center; gap: 10px; }
+    h2 .num { width: 28px; height: 28px; background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #a78bfa; font-weight: 600; flex-shrink: 0; }
+    h3 { font-size: 16px; font-weight: 600; color: #b8b8d0; margin-bottom: 12px; }
+    ul { list-style: none; padding-left: 0; }
+    li { padding: 8px 0; padding-left: 24px; position: relative; color: #9898b0; }
+    li::before { content: '→'; position: absolute; left: 0; color: #a78bfa; font-weight: 600; }
+    .deliverable { background: rgba(139, 92, 246, 0.06); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+    .deliverable h3 { color: #e8e8f0; margin-bottom: 8px; }
+    .deliverable p { color: #8888a0; font-size: 14px; }
+    .deliverable .tag { display: inline-block; background: rgba(139, 92, 246, 0.15); color: #a78bfa; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 10px; margin-top: 10px; }
+    .offer { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(59, 130, 246, 0.1)); border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 16px; padding: 40px; text-align: center; margin: 48px 0; }
+    .offer-label { font-size: 12px; color: #a78bfa; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .offer-price { font-size: 48px; font-weight: 700; color: #e8e8f0; }
+    .offer-sub { font-size: 14px; color: #8888a0; margin-top: 8px; }
+    .offer-note { font-size: 13px; color: #666680; margin-top: 16px; }
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 32px 0; }
+    .option { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 28px; }
+    .option h3 { color: #e8e8f0; font-size: 17px; }
+    .option .price { font-size: 28px; font-weight: 700; color: #a78bfa; margin: 12px 0 8px; }
+    .option .desc { color: #8888a0; font-size: 13px; }
+    .metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 32px 0; }
+    .metric { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 24px; text-align: center; }
+    .metric .value { font-size: 32px; font-weight: 700; color: #a78bfa; }
+    .metric .label { font-size: 12px; color: #666680; text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+    .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 32px 0; }
+    .week { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 20px; }
+    .week .wk { font-size: 11px; color: #a78bfa; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+    .week .tasks { font-size: 13px; color: #8888a0; }
+    .ctas { text-align: center; margin: 48px 0; }
+    .btn { display: inline-block; background: linear-gradient(135deg, #7c3aed, #3b82f6); color: #fff; font-weight: 600; font-size: 16px; padding: 14px 36px; border-radius: 10px; text-decoration: none; margin: 8px; transition: opacity 0.2s; }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #b8b8d0; }
+    .contact-bar { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 24px 32px; display: flex; justify-content: space-between; align-items: center; margin-top: 48px; }
+    .contact-bar .label { font-size: 12px; color: #666680; text-transform: uppercase; letter-spacing: 1px; }
+    .contact-bar .value { font-size: 15px; color: #e8e8f0; font-weight: 500; margin-top: 2px; }
+    .purrcendence { text-align: center; margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .purrcendence p { font-size: 13px; color: #444460; }
+    .purrcendence .logo { font-size: 11px; color: #333350; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="badge">Pilot Proposal v1.0</div>
+    <h1>AI O&G Readiness Assessment</h1>
+    <p class="subtitle">A 4-week embedded pilot for Wellframe in the Permian Basin</p>
+    <div class="meta">
+      <div class="meta-item">
+        <div class="meta-value">4 weeks</div>
+        <div class="meta-label">Duration</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-value">3 skills</div>
+        <div class="meta-label">Deployed</div>
+      </div>
+      <div class="meta-item">
+        <div class="meta-value">$5,000</div>
+        <div class="meta-label">Flat fee</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2><span class="num">1</span>What We Deliver</h2>
+    <p style="color:#8888a0; margin-bottom:24px;">An embedded AI agent team that works alongside your Permian Basin operations team — doing real work, generating real ROI metrics, and proving the model before you commit to a full engagement.</p>
+
+    <div class="deliverable">
+      <h3>AI Production Operations Agent</h3>
+      <p>Monitors well performance data, identifies failure patterns before they happen, flags anomalies in real-time. Built on your specific Permian Basin workflow.</p>
+      <span class="tag">Production · Predictive Maintenance</span>
+    </div>
+    <div class="deliverable">
+      <h3>AI Compliance Reporting Agent</h3>
+      <p>Auto-generates required regulatory reports (TX RRC, NM OCD), tracks submission deadlines, flags upcoming inspections and outstanding documentation.</p>
+      <span class="tag">Regulatory · Reporting · Midstream</span>
+    </div>
+    <div class="deliverable">
+      <h3>AI Well Economics Agent</h3>
+      <p>Calculates per-well ROI, breakeven economics, and NPV scenarios as commodity prices and production data update. Delivered as a weekly dashboard.</p>
+      <span class="tag">Business Ops · Economics · Permian Basin</span>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2><span class="num">2</span>What Success Looks Like</h2>
+    <div class="metrics">
+      <div class="metric">
+        <div class="value">4 hrs/wk</div>
+        <div class="label">Manual reporting time saved</div>
+      </div>
+      <div class="metric">
+        <div class="value">24/7</div>
+        <div class="label">Anomaly monitoring coverage</div>
+      </div>
+      <div class="metric">
+        <div class="value">3</div>
+        <div class="label">Working AI agents live in production</div>
+      </div>
+    </div>
+    <p style="color:#8888a0; font-size:14px; text-align:center;">These are conservative estimates based on similar O&G AI deployments. Actual results depend on data quality and workflow integration.</p>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2><span class="num">3</span>Timeline</h2>
+    <div class="timeline">
+      <div class="week">
+        <div class="wk">Week 1</div>
+        <div class="tasks">Kickoff + data intake + agent deployment setup</div>
+      </div>
+      <div class="week">
+        <div class="wk">Week 2</div>
+        <div class="tasks">Production Ops Agent live + first anomaly report</div>
+      </div>
+      <div class="week">
+        <div class="wk">Week 3</div>
+        <div class="tasks">Compliance + Economics Agents live</div>
+      </div>
+      <div class="week">
+        <div class="wk">Week 4</div>
+        <div class="tasks">ROI report + recommendation for full engagement</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2><span class="num">4</span>Pilot Investment</h2>
+    <div class="options">
+      <div class="option">
+        <h3>Flat Fee Pilot</h3>
+        <div class="price">$5,000</div>
+        <div class="desc">Full 4-week assessment, 3 deployed agents, written ROI report. Best if you want to validate before committing to ongoing work.</div>
+      </div>
+      <div class="option">
+        <h3>Monthly Retainer</h3>
+        <div class="price">$2,500<span style="font-size:14px; color:#666680; font-weight:400;">/mo</span></div>
+        <div class="desc">Ongoing AI ops support with unlimited agent deployments. Includes monthly strategy check-in. Converts to $15k/mo full engagement after pilot.</div>
+      </div>
+    </div>
+    <p style="text-align:center; color:#666680; font-size:13px;">Both options include direct access to our O&G domain team via chat. No long-term contract required for the pilot phase.</p>
+  </div>
+
+  <div class="offer">
+    <div class="offer-label">Pilot Investment</div>
+    <div class="offer-price">$5,000 flat fee</div>
+    <div class="offer-sub">3 AI agents · 4 weeks · written ROI report · no long-term lock-in</div>
+    <div class="offer-note">We guarantee delivery. If the agents don't perform, we fix it or refund the pilot fee.</div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2><span class="num">5</span>What We Need From Wellframe</h2>
+    <ul>
+      <li>Access to 1-2 historical wells' production data (SCADA, production reports, downhole diagnostics)</li>
+      <li>A designated point of contact for weekly check-ins (30 min/week)</li>
+      <li>Confirmation of which regulatory reports are currently manual (TX RRC, NM OCD, etc.)</li>
+      <li>Current reporting workflow documentation (even rough notes help)</li>
+    </ul>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <h2><span class="num">6</span>The Path to Full Engagement</h2>
+    <p style="color:#8888a0; margin-bottom:20px;">The pilot exists to prove value, not to trap you. After the 4 weeks, you get:</p>
+    <ul>
+      <li>A complete ROI analysis with real numbers from your actual data</li>
+      <li>Recommendation on which agents to expand first</li>
+      <li>Pricing for full deployment ($15k-30k/month depending on scope)</li>
+      <li>A case study we publish (with your permission) as proof of what AI + O&G can do</li>
+    </ul>
+  </div>
+
+  <div class="ctas">
+    <a href="mailto:biosphereagentics@gmail.com?subject=Wellframe%20Pilot%20-%20AI%20O%26G%20Readiness%20Assessment" class="btn">Sign Up for Pilot</a>
+    <a href="https://wellframe-ba.github.io/deck.html" class="btn btn-outline">View Full Deck</a>
+  </div>
+
+  <div class="contact-bar">
+    <div>
+      <div class="label">Questions? Reach us directly</div>
+      <div class="value">biosphereagentics@gmail.com</div>
+    </div>
+    <div style="text-align:right;">
+      <div class="label">Learn more</div>
+      <div class="value">wellframe-ba.github.io</div>
+    </div>
+  </div>
+
+  <div class="purrcendence">
+    <div class="logo">Project Purrcendence</div>
+    <p>AI and human operators, working together. Both species profit.</p>
+  </div>
+</div>
+</body>
+</html>
