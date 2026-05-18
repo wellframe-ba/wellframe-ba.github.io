@@ -185,22 +185,22 @@
 
     .admin-container.show { display: block; }
 
-    .admin-header {
+    .section-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
-    .admin-header h1 {
+    .section-header h2 {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.8em;
+      font-size: 1.4em;
       color: #fff;
     }
 
-    .admin-header h1 span { color: var(--accent); }
+    .section-header h2 span { color: var(--accent); }
 
-    .admin-actions {
+    .section-actions {
       display: flex;
       gap: 12px;
     }
@@ -237,12 +237,13 @@
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 24px;
+      margin-bottom: 32px;
     }
 
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
       margin-bottom: 24px;
       padding-bottom: 24px;
       border-bottom: 1px solid var(--border);
@@ -257,13 +258,13 @@
 
     .stat-card .number {
       font-family: 'Outfit', sans-serif;
-      font-size: 2em;
+      font-size: 1.8em;
       font-weight: 800;
       color: var(--accent);
     }
 
     .stat-card .label {
-      font-size: 0.75em;
+      font-size: 0.7em;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -271,17 +272,17 @@
 
     .table-container {
       overflow-x: auto;
-      max-height: 400px;
+      max-height: 300px;
     }
 
-    .subscribers-table {
+    .data-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.85em;
+      font-size: 0.8em;
       text-align: left;
     }
 
-    .subscribers-table th {
+    .data-table th {
       color: var(--accent);
       padding: 12px 16px;
       border-bottom: 1px solid rgba(242, 140, 56, 0.2);
@@ -292,13 +293,13 @@
       background: var(--bg-card);
     }
 
-    .subscribers-table td {
+    .data-table td {
       padding: 12px 16px;
       border-bottom: 1px solid var(--border);
       color: var(--text-primary);
     }
 
-    .subscribers-table tr:hover td {
+    .data-table tr:hover td {
       background: rgba(242, 140, 56, 0.04);
     }
 
@@ -319,13 +320,13 @@
 
     .empty-state {
       text-align: center;
-      padding: 60px 0;
+      padding: 40px 0;
       color: var(--text-muted);
     }
 
     .empty-state .icon {
-      font-size: 3em;
-      margin-bottom: 16px;
+      font-size: 2.5em;
+      margin-bottom: 12px;
     }
 
     /* Footer */
@@ -344,9 +345,9 @@
 
     /* Mobile */
     @media (max-width: 768px) {
-      .stats-row { grid-template-columns: 1fr; }
-      .admin-header { flex-direction: column; gap: 16px; align-items: flex-start; }
-      .admin-actions { flex-wrap: wrap; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .section-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .section-actions { flex-wrap: wrap; }
     }
   </style>
 </head>
@@ -361,7 +362,7 @@
   <div class="login-container" id="loginContainer">
     <div class="login-card">
       <h1>Admin Access</h1>
-      <p>Enter your credentials to access the subscriber dashboard.</p>
+      <p>Enter your credentials to access the dashboard.</p>
 
       <div class="error-msg" id="errorMsg">Invalid credentials. Please try again.</div>
 
@@ -385,32 +386,38 @@
 
   <!-- Admin Dashboard -->
   <div class="admin-container" id="adminContainer">
-    <div class="admin-header">
-      <h1>Subscriber <span>Dashboard</span></h1>
-      <div class="admin-actions">
-        <button class="admin-btn" onclick="refreshSubscribers()">↻ Refresh</button>
-        <button class="admin-btn" onclick="exportToCSV()">↓ Export CSV</button>
+
+    <!-- Subscribers Section -->
+    <div class="section-header">
+      <h2>Email <span>Waitlist</span></h2>
+      <div class="section-actions">
+        <button class="admin-btn" onclick="refreshAll()">↻ Refresh</button>
+        <button class="admin-btn" onclick="exportSubscribers()">↓ Export CSV</button>
       </div>
     </div>
 
     <div class="admin-panel">
       <div class="stats-row">
         <div class="stat-card">
-          <div class="number" id="totalCount">0</div>
+          <div class="number" id="subTotal">0</div>
           <div class="label">Total Subscribers</div>
         </div>
         <div class="stat-card">
-          <div class="number" id="recentCount">0</div>
+          <div class="number" id="subRecent">0</div>
           <div class="label">Last 7 Days</div>
         </div>
         <div class="stat-card">
-          <div class="number" id="todayCount">0</div>
+          <div class="number" id="subToday">0</div>
           <div class="label">Today</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="bookTotal">0</div>
+          <div class="label">Discovery Calls</div>
         </div>
       </div>
 
       <div class="table-container">
-        <table class="subscribers-table">
+        <table class="data-table">
           <thead>
             <tr>
               <th>Email</th>
@@ -418,12 +425,46 @@
               <th>Registered</th>
             </tr>
           </thead>
-          <tbody id="tableBody">
+          <tbody id="subTableBody">
           </tbody>
         </table>
-        <div class="empty-state" id="emptyState">
+        <div class="empty-state" id="subEmpty">
           <div class="icon">📭</div>
           <div>No subscribers yet</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Discovery Calls Section -->
+    <div class="section-header">
+      <h2>Discovery <span>Calls</span></h2>
+      <div class="section-actions">
+        <button class="admin-btn" onclick="exportBookings()">↓ Export CSV</button>
+      </div>
+    </div>
+
+    <div class="admin-panel">
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Company</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Operation Type</th>
+              <th>Pain Point</th>
+              <th>Infrastructure</th>
+              <th>Budget</th>
+              <th>Booked</th>
+            </tr>
+          </thead>
+          <tbody id="bookingTableBody">
+          </tbody>
+        </table>
+        <div class="empty-state" id="bookingEmpty">
+          <div class="icon">📞</div>
+          <div>No discovery call requests yet</div>
         </div>
       </div>
     </div>
@@ -437,6 +478,7 @@
   <script>
     const ADMIN_PASSWORD = 'tiezi0508';
     let subscribers = [];
+    let bookings = [];
 
     function handleLogin(event) {
       event.preventDefault();
@@ -444,7 +486,7 @@
       if (password === ADMIN_PASSWORD) {
         document.getElementById('loginContainer').style.display = 'none';
         document.getElementById('adminContainer').classList.add('show');
-        loadSubscribers();
+        loadAll();
       } else {
         document.getElementById('errorMsg').classList.add('show');
         setTimeout(() => {
@@ -453,48 +495,66 @@
       }
     }
 
+    async function loadAll() {
+      await Promise.all([loadSubscribers(), loadBookings()]);
+    }
+
+    function refreshAll() {
+      loadAll();
+    }
+
     async function loadSubscribers() {
       try {
         const response = await fetch('/api/subscribers');
         subscribers = await response.json();
         renderSubscribers();
-        updateStats();
+        updateSubStats();
       } catch (e) {
         console.error('Failed to load subscribers:', e);
       }
     }
 
-    function refreshSubscribers() {
-      loadSubscribers();
+    async function loadBookings() {
+      try {
+        const response = await fetch('/api/bookings');
+        bookings = await response.json();
+        renderBookings();
+        updateBookingStats();
+      } catch (e) {
+        console.error('Failed to load bookings:', e);
+      }
     }
 
-    function updateStats() {
-      document.getElementById('totalCount').textContent = subscribers.length;
+    function updateSubStats() {
+      document.getElementById('subTotal').textContent = subscribers.length;
 
       const weekAgo = new Date();
       weekAgo.setDate(weekAgo.getDate() - 7);
       const recentCount = subscribers.filter(s => new Date(s.timestamp) > weekAgo).length;
-      document.getElementById('recentCount').textContent = recentCount;
+      document.getElementById('subRecent').textContent = recentCount;
 
       const today = new Date().toDateString();
       const todayCount = subscribers.filter(s => new Date(s.timestamp).toDateString() === today).length;
-      document.getElementById('todayCount').textContent = todayCount;
+      document.getElementById('subToday').textContent = todayCount;
+    }
+
+    function updateBookingStats() {
+      document.getElementById('bookTotal').textContent = bookings.length;
     }
 
     function renderSubscribers() {
-      const tbody = document.getElementById('tableBody');
-      const emptyState = document.getElementById('emptyState');
+      const tbody = document.getElementById('subTableBody');
+      const empty = document.getElementById('subEmpty');
 
       tbody.innerHTML = '';
 
       if (subscribers.length === 0) {
-        emptyState.style.display = 'block';
+        empty.style.display = 'block';
         return;
       }
 
-      emptyState.style.display = 'none';
+      empty.style.display = 'none';
 
-      // Sort by timestamp descending
       const sorted = [...subscribers].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
       sorted.forEach(item => {
@@ -508,21 +568,71 @@
       });
     }
 
-    function exportToCSV() {
+    function renderBookings() {
+      const tbody = document.getElementById('bookingTableBody');
+      const empty = document.getElementById('bookingEmpty');
+
+      tbody.innerHTML = '';
+
+      if (bookings.length === 0) {
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+
+      const sorted = [...bookings].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+      sorted.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.name || '-'}</td>
+          <td>${item.company || '-'}</td>
+          <td>${item.email}</td>
+          <td>${item.phone || '-'}</td>
+          <td>${item.operation_type || '-'}</td>
+          <td>${item.pain_point || '-'}</td>
+          <td>${item.infrastructure || '-'}</td>
+          <td>${item.budget || '-'}</td>
+          <td>${new Date(item.timestamp).toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function exportSubscribers() {
       if (subscribers.length === 0) {
         alert("No subscribers to export.");
         return;
       }
 
-      let csvContent = "Email,Timestamp\n";
+      let csv = "Email,Timestamp\n";
       subscribers.forEach(item => {
-        csvContent += `"${item.email}","${item.timestamp}"\n`;
+        csv += `"${item.email}","${item.timestamp}"\n`;
       });
 
-      const encodedUri = encodeURI("data:text/csv;charset=utf-8," + csvContent);
+      downloadCSV(csv, `subscribers_${Date.now()}.csv`);
+    }
+
+    function exportBookings() {
+      if (bookings.length === 0) {
+        alert("No bookings to export.");
+        return;
+      }
+
+      let csv = "Name,Company,Email,Phone,Operation Type,Pain Point,Infrastructure,Budget,Timestamp\n";
+      bookings.forEach(item => {
+        csv += `"${item.name || ''}","${item.company || ''}","${item.email}","${item.phone || ''}","${item.operation_type || ''}","${item.pain_point || ''}","${item.infrastructure || ''}","${item.budget || ''}","${item.timestamp}"\n`;
+      });
+
+      downloadCSV(csv, `bookings_${Date.now()}.csv`);
+    }
+
+    function downloadCSV(content, filename) {
+      const encodedUri = encodeURI("data:text/csv;charset=utf-8," + content);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `subscribers_${Date.now()}.csv`);
+      link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

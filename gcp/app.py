@@ -13,7 +13,8 @@ import uvicorn
 app = FastAPI()
 
 GCS_BUCKET_NAME = os.environ.get("GCS_BUCKET", "")
-GCS_FILE = "subscribers.json"
+SUBSCRIBERS_FILE = "subscribers.json"
+BOOKINGS_FILE = "bookings.json"
 
 STATIC_DIR = Path("/usr/share/nginx/html")
 
@@ -28,29 +29,41 @@ except Exception as e:
     bucket = None
     gcs_available = False
 
-def read_subscribers():
+def read_json_file(filename):
     if not gcs_available or bucket is None:
         return []
     try:
-        blob = bucket.blob(GCS_FILE)
+        blob = bucket.blob(filename)
         if not blob.exists():
             return []
         content = blob.download_as_bytes().decode('utf-8')
         return json.loads(content) if content else []
     except Exception as e:
-        print(f"Error reading from GCS: {e}")
+        print(f"Error reading {filename}: {e}")
         return []
 
-def write_subscribers(subscribers):
+def write_json_file(filename, data):
     if not gcs_available or bucket is None:
         return False
     try:
-        blob = bucket.blob(GCS_FILE)
-        blob.upload_from_string(json.dumps(subscribers, indent=2))
+        blob = bucket.blob(filename)
+        blob.upload_from_string(json.dumps(data, indent=2))
         return True
     except Exception as e:
-        print(f"Error writing to GCS: {e}")
+        print(f"Error writing {filename}: {e}")
         return False
+
+def read_subscribers():
+    return read_json_file(SUBSCRIBERS_FILE)
+
+def write_subscribers(subscribers):
+    return write_json_file(SUBSCRIBERS_FILE, subscribers)
+
+def read_bookings():
+    return read_json_file(BOOKINGS_FILE)
+
+def write_bookings(bookings):
+    return write_json_file(BOOKINGS_FILE, bookings)
 
 @app.get("/health")
 async def health():
@@ -85,6 +98,46 @@ async def signup(email: str = Form(...)):
 @app.get("/api/subscribers")
 async def get_subscribers():
     return JSONResponse(content=read_subscribers())
+
+@app.post("/api/book-call")
+async def book_call(
+    name: str = Form(...),
+    company: str = Form(...),
+    email: str = Form(...),
+    phone: str = Form(""),
+    operation_type: str = Form(""),
+    pain_point: str = Form(""),
+    infrastructure: str = Form(""),
+    budget: str = Form("")
+):
+    bookings = read_bookings()
+
+    booking = {
+        "name": name,
+        "company": company,
+        "email": email.lower().strip(),
+        "phone": phone,
+        "operation_type": operation_type,
+        "pain_point": pain_point,
+        "infrastructure": infrastructure,
+        "budget": budget,
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+    bookings.append(booking)
+    success = write_bookings(bookings)
+
+    if not success:
+        return JSONResponse(
+            content={"status": "error", "message": "Failed to save booking"},
+            status_code=500
+        )
+
+    return {"status": "success", "message": "Booking received"}
+
+@app.get("/api/bookings")
+async def get_bookings():
+    return JSONResponse(content=read_bookings())
 
 @app.get("/{filename}")
 async def serve_file(filename: str):
