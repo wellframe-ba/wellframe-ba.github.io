@@ -1289,11 +1289,94 @@ setTimeout(function() {
 <div class="cta-section">
   <h2>Ready to Turn AI Pilots Into<br>Production Operations?</h2>
   <p>Mid-cap Alberta operators are the sweet spot. If you have SCADA data, real operational pain points, and a team willing to engage — let's talk.</p>
-  <div class="cta-buttons">
+
+  <div class="cta-buttons" id="ctaButtons">
     <a href="signup.html" class="btn btn-secondary">Join Stage One Waitlist</a>
-    <a href="mailto:biosphereagentics@gmail.com?subject=Discovery%20Call%20Request%20%E2%80%94%20Wellframe%20Agentics&body=Hi%20Wellframe%20Team%2C%0A%0AI%27d%20like%20to%20explore%20a%20discovery%20call%20about%20AI%20agent%20skills%20for%20our%20operation.%0A%0ACompany%3A%20%5BYour%20company%20name%5D%0AOperation%20type%3A%20%5BUpstream%20%2F%20Midstream%20%2F%20Downstream%20%2F%20Other%5D%0APrimary%20pain%20point%3A%20%5BWhat%27s%20the%20biggest%20operational%20challenge%20you%27re%20facing%3F%5D%0ACurrent%20data%20infrastructure%3A%20%5BDo%20you%20have%20SCADA%20access%2C%20historians%2C%20document%20archives%3F%5D%0ARough%20budget%20range%3A%20%5B%3CCAD%2050K%20%2F%20CAD%2050-100K%20%2F%20CAD%20100-250K%20%2F%20%3ECAD%20250K%5D%0A%0ALooking%20forward%20to%20connecting.%0A%0ABest%2C%0A%5BYour%20name%5D" class="btn btn-primary">Book a 30-Minute Discovery Call</a>
+    <button class="btn btn-primary" onclick="showDiscoveryForm()" id="discoveryBtn">Book a 30-Minute Discovery Call</button>
   </div>
+
+  <form id="discoveryForm" style="display:none; max-width:500px; margin:0 auto; text-align:left;" onsubmit="submitDiscovery(event)">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+      <input type="text" name="name" placeholder="Your name" required style="background:rgba(11,31,46,0.6); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:#fff; font-family:inherit; font-size:0.85em; outline:none; width:100%;">
+      <input type="text" name="company" placeholder="Company" required style="background:rgba(11,31,46,0.6); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:#fff; font-family:inherit; font-size:0.85em; outline:none; width:100%;">
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+      <input type="email" name="email" placeholder="Email address" required style="background:rgba(11,31,46,0.6); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:#fff; font-family:inherit; font-size:0.85em; outline:none; width:100%;">
+      <input type="tel" name="phone" placeholder="Phone (optional)" style="background:rgba(11,31,46,0.6); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:#fff; font-family:inherit; font-size:0.85em; outline:none; width:100%;">
+    </div>
+    <div style="margin-bottom:10px;">
+      <select name="operation_type" style="background:rgba(11,31,46,0.6); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text-secondary); font-family:inherit; font-size:0.85em; outline:none; width:100%;">
+        <option value="">Operation type</option>
+        <option>Upstream</option>
+        <option>Midstream</option>
+        <option>Downstream</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div style="margin-bottom:10px;">
+      <textarea name="pain_point" placeholder="Primary pain point — what's the biggest operational challenge you're facing?" rows="2" required style="background:rgba(11,31,46,0.6); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:#fff; font-family:inherit; font-size:0.85em; outline:none; width:100%; resize:none;"></textarea>
+    </div>
+    <div style="margin-bottom:10px;">
+      <select name="budget" style="background:rgba(11,31,46,0.6); border:1px solid var(--border); border-radius:8px; padding:10px 12px; color:var(--text-secondary); font-family:inherit; font-size:0.85em; outline:none; width:100%;">
+        <option value="">Rough budget range</option>
+        <option>< CAD $50K</option>
+        <option>CAD $50–100K</option>
+        <option>CAD $100–250K</option>
+        <option>> CAD $250K</option>
+      </select>
+    </div>
+    <div id="discoveryStatus" style="margin-bottom:10px;"></div>
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button type="button" class="btn btn-secondary" onclick="hideDiscoveryForm()" style="background:transparent; border:1px solid var(--border);">Cancel</button>
+      <button type="submit" class="btn btn-primary" id="discoverySubmit">Submit Request</button>
+    </div>
+  </form>
 </div>
+
+<script>
+function showDiscoveryForm() {
+  document.getElementById('ctaButtons').style.display = 'none';
+  document.getElementById('discoveryForm').style.display = 'block';
+}
+
+function hideDiscoveryForm() {
+  document.getElementById('ctaButtons').style.display = 'flex';
+  document.getElementById('discoveryForm').style.display = 'none';
+  document.getElementById('discoveryStatus').innerHTML = '';
+}
+
+async function submitDiscovery(e) {
+  e.preventDefault();
+  const form = e.target;
+  const submitBtn = document.getElementById('discoverySubmit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting…';
+
+  const fd = new FormData(form);
+
+  try {
+    const res = await fetch('/api/book-call', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(fd).toString()
+    });
+    const data = await res.json();
+
+    if (data.status === 'success') {
+      document.getElementById('discoveryStatus').innerHTML = '<span style="color:var(--success);">✓ Discovery call requested. We\'ll be in touch within 24 hours.</span>';
+      form.reset();
+      setTimeout(hideDiscoveryForm, 2500);
+    } else {
+      document.getElementById('discoveryStatus').innerHTML = '<span style="color:var(--error);">✕ ' + (data.message || 'Something went wrong') + '</span>';
+    }
+  } catch (err) {
+    document.getElementById('discoveryStatus').innerHTML = '<span style="color:var(--error);">✕ Network error: ' + err.message + '</span>';
+  }
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Submit Request';
+}
+</script>
 
 <!-- FOOTER -->
 <div class="footer">

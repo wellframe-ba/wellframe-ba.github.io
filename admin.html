@@ -23,7 +23,11 @@
       --blue: #0077B6;
       --gold: #FFB81C;
       --success: #00BFA5;
+      --success-dim: rgba(0, 191, 165, 0.12);
       --error: #E05252;
+      --error-dim: rgba(224, 82, 82, 0.12);
+      --purple: #8B5CF6;
+      --purple-dim: rgba(139, 92, 246, 0.12);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -64,9 +68,8 @@
       font-size: 1.1em;
       letter-spacing: 2px;
       color: #fff;
+      cursor: pointer;
     }
-
-    .top-nav .logo span { color: var(--accent); }
 
     .top-nav .nav-badge {
       background: var(--success);
@@ -177,7 +180,7 @@
 
     /* Admin Content */
     .admin-container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 120px auto 40px;
       padding: 0 24px;
       display: none;
@@ -189,7 +192,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .section-header h2 {
@@ -202,22 +205,22 @@
 
     .section-actions {
       display: flex;
-      gap: 12px;
+      gap: 10px;
     }
 
     .admin-btn {
       background: var(--bg-card);
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      padding: 10px 20px;
-      font-size: 0.8em;
+      padding: 8px 16px;
+      font-size: 0.78em;
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .admin-btn:hover {
@@ -227,7 +230,7 @@
     }
 
     .admin-btn.danger:hover {
-      background: rgba(224, 82, 82, 0.08);
+      background: var(--error-dim);
       border-color: rgba(224, 82, 82, 0.3);
       color: var(--error);
     }
@@ -236,87 +239,174 @@
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 32px;
+      padding: 20px;
+      margin-bottom: 28px;
     }
 
     .stats-row {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-      padding-bottom: 24px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
       border-bottom: 1px solid var(--border);
     }
 
     .stat-card {
       text-align: center;
-      padding: 16px;
+      padding: 12px 8px;
       background: rgba(11, 31, 46, 0.4);
-      border-radius: 12px;
+      border-radius: 10px;
     }
 
     .stat-card .number {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.8em;
+      font-size: 1.6em;
       font-weight: 800;
       color: var(--accent);
     }
 
     .stat-card .label {
-      font-size: 0.7em;
+      font-size: 0.65em;
       color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
-    .table-container {
+    /* Scrollable Tables */
+    .table-scroll {
       overflow-x: auto;
-      max-height: 300px;
+      max-height: 340px;
+      overflow-y: auto;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .table-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .table-scroll::-webkit-scrollbar-track {
+      background: var(--bg);
+      border-radius: 3px;
+    }
+
+    .table-scroll::-webkit-scrollbar-thumb {
+      background: var(--border-bright);
+      border-radius: 3px;
     }
 
     .data-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8em;
+      font-size: 0.78em;
       text-align: left;
     }
 
     .data-table th {
       color: var(--accent);
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-bottom: 1px solid rgba(242, 140, 56, 0.2);
       font-weight: 600;
       letter-spacing: 0.5px;
       position: sticky;
       top: 0;
       background: var(--bg-card);
+      white-space: nowrap;
+      z-index: 10;
     }
 
     .data-table td {
-      padding: 12px 16px;
+      padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       color: var(--text-primary);
+      vertical-align: middle;
     }
 
     .data-table tr:hover td {
       background: rgba(242, 140, 56, 0.04);
     }
 
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-size: 0.75em;
-      font-weight: 600;
+    .data-table tr:last-child td {
+      border-bottom: none;
     }
 
-    .status-badge.active {
-      background: rgba(0, 191, 165, 0.12);
-      color: var(--success);
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.72em;
+      font-weight: 600;
+      white-space: nowrap;
     }
+
+    .badge.new { background: var(--accent-dim); color: var(--accent); }
+    .badge.contacted { background: rgba(0, 119, 182, 0.12); color: var(--blue); }
+    .badge.qualified { background: var(--purple-dim); color: var(--purple); }
+    .badge.proposal { background: rgba(255, 184, 28, 0.12); color: var(--gold); }
+    .badge.won { background: var(--success-dim); color: var(--success); }
+    .badge.lost { background: var(--error-dim); color: var(--error); }
+
+    /* Action Buttons */
+    .action-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 0.85em;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action-btn:hover { border-color: var(--border-bright); background: rgba(255,255,255,0.05); }
+
+    .action-btn.delete:hover { border-color: rgba(224, 82, 82, 0.5); color: var(--error); background: var(--error-dim); }
+
+    .action-group {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    /* Stage Select */
+    .stage-select {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-primary);
+      padding: 4px 8px;
+      font-size: 0.78em;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      min-width: 110px;
+    }
+
+    .stage-select:focus { border-color: var(--accent); }
+
+    /* Notes Input */
+    .notes-input {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      color: var(--text-secondary);
+      padding: 4px 6px;
+      font-size: 0.75em;
+      font-family: inherit;
+      width: 120px;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    .notes-input:hover { border-color: var(--border); background: rgba(11,31,46,0.5); }
+    .notes-input:focus { border-color: var(--accent); background: rgba(11,31,46,0.8); color: var(--text-primary); }
 
     .empty-state {
       text-align: center;
@@ -344,9 +434,9 @@
     }
 
     /* Mobile */
-    @media (max-width: 768px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-      .section-header { flex-direction: column; gap: 16px; align-items: flex-start; }
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: repeat(3, 1fr); }
+      .section-header { flex-direction: column; gap: 12px; align-items: flex-start; }
       .section-actions { flex-wrap: wrap; }
     }
   </style>
@@ -400,7 +490,7 @@
       <div class="stats-row">
         <div class="stat-card">
           <div class="number" id="subTotal">0</div>
-          <div class="label">Total Subscribers</div>
+          <div class="label">Total</div>
         </div>
         <div class="stat-card">
           <div class="number" id="subRecent">0</div>
@@ -412,39 +502,45 @@
         </div>
         <div class="stat-card">
           <div class="number" id="bookTotal">0</div>
-          <div class="label">Discovery Calls</div>
+          <div class="label">Leads</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="bookWon">0</div>
+          <div class="label">Won</div>
         </div>
       </div>
 
-      <div class="table-container">
+      <div class="table-scroll">
         <table class="data-table">
           <thead>
             <tr>
               <th>Email</th>
               <th>Status</th>
               <th>Registered</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody id="subTableBody">
           </tbody>
         </table>
-        <div class="empty-state" id="subEmpty">
+        <div class="empty-state" id="subEmpty" style="display:none;">
           <div class="icon">📭</div>
           <div>No subscribers yet</div>
         </div>
       </div>
     </div>
 
-    <!-- Discovery Calls Section -->
+    <!-- Discovery Calls / Lead Pipeline Section -->
     <div class="section-header">
-      <h2>Discovery <span>Calls</span></h2>
+      <h2>Lead <span>Pipeline</span></h2>
       <div class="section-actions">
+        <button class="admin-btn" onclick="refreshAll()">↻ Refresh</button>
         <button class="admin-btn" onclick="exportBookings()">↓ Export CSV</button>
       </div>
     </div>
 
     <div class="admin-panel">
-      <div class="table-container">
+      <div class="table-scroll">
         <table class="data-table">
           <thead>
             <tr>
@@ -452,19 +548,41 @@
               <th>Company</th>
               <th>Email</th>
               <th>Phone</th>
-              <th>Operation Type</th>
+              <th>Operation</th>
               <th>Pain Point</th>
-              <th>Infrastructure</th>
               <th>Budget</th>
+              <th>Stage</th>
+              <th>Notes</th>
               <th>Booked</th>
             </tr>
           </thead>
           <tbody id="bookingTableBody">
           </tbody>
         </table>
-        <div class="empty-state" id="bookingEmpty">
+        <div class="empty-state" id="bookingEmpty" style="display:none;">
           <div class="icon">📞</div>
           <div>No discovery call requests yet</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
+          <span class="badge new">●</span> New
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
+          <span class="badge contacted">●</span> Contacted
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
+          <span class="badge qualified">●</span> Qualified
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
+          <span class="badge proposal">●</span> Proposal
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
+          <span class="badge won">●</span> Won
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
+          <span class="badge lost">●</span> Lost
         </div>
       </div>
     </div>
@@ -479,6 +597,16 @@
     const ADMIN_PASSWORD = 'tiezi0508';
     let subscribers = [];
     let bookings = [];
+
+    const STAGES = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost'];
+    const STAGE_LABELS = {
+      new: 'New',
+      contacted: 'Contacted',
+      qualified: 'Qualified',
+      proposal: 'Proposal',
+      won: 'Won',
+      lost: 'Lost'
+    };
 
     function handleLogin(event) {
       event.preventDefault();
@@ -540,19 +668,67 @@
 
     function updateBookingStats() {
       document.getElementById('bookTotal').textContent = bookings.length;
+      const wonCount = bookings.filter(b => b.status === 'won').length;
+      document.getElementById('bookWon').textContent = wonCount;
+    }
+
+    async function deleteSubscriber(email) {
+      if (!confirm(`Delete ${email} from waitlist?`)) return;
+      try {
+        const res = await fetch(`/api/subscribers/${encodeURIComponent(email)}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.status === 'success') {
+          await loadSubscribers();
+        } else {
+          alert(data.message || 'Delete failed');
+        }
+      } catch (e) {
+        alert('Delete failed: ' + e.message);
+      }
+    }
+
+    async function updateBookingStage(bookingId, newStatus) {
+      try {
+        const res = await fetch(`/api/bookings/${bookingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `status=${encodeURIComponent(newStatus)}`
+        });
+        const data = await res.json();
+        if (data.status !== 'success') {
+          alert(data.message || 'Update failed');
+        }
+      } catch (e) {
+        alert('Update failed: ' + e.message);
+      }
+    }
+
+    async function updateBookingNotes(bookingId, notes) {
+      try {
+        await fetch(`/api/bookings/${bookingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `notes=${encodeURIComponent(notes)}`
+        });
+      } catch (e) {
+        console.error('Failed to update notes:', e);
+      }
     }
 
     function renderSubscribers() {
       const tbody = document.getElementById('subTableBody');
       const empty = document.getElementById('subEmpty');
+      const table = document.querySelector('#subTableBody').closest('.table-scroll');
 
       tbody.innerHTML = '';
 
       if (subscribers.length === 0) {
+        table.style.display = 'none';
         empty.style.display = 'block';
         return;
       }
 
+      table.style.display = 'block';
       empty.style.display = 'none';
 
       const sorted = [...subscribers].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -561,8 +737,11 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${item.email}</td>
-          <td><span class="status-badge active">● Active</span></td>
-          <td>${new Date(item.timestamp).toLocaleString()}</td>
+          <td><span class="badge new">● Active</span></td>
+          <td>${new Date(item.timestamp).toLocaleDateString()}</td>
+          <td>
+            <button class="action-btn delete" onclick="deleteSubscriber('${item.email.replace(/'/g, "\\'")}')" title="Delete">✕</button>
+          </td>
         `;
         tbody.appendChild(row);
       });
@@ -571,33 +750,62 @@
     function renderBookings() {
       const tbody = document.getElementById('bookingTableBody');
       const empty = document.getElementById('bookingEmpty');
+      const table = document.querySelector('#bookingTableBody').closest('.table-scroll');
 
       tbody.innerHTML = '';
 
       if (bookings.length === 0) {
+        table.style.display = 'none';
         empty.style.display = 'block';
         return;
       }
 
+      table.style.display = 'block';
       empty.style.display = 'none';
 
       const sorted = [...bookings].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
       sorted.forEach(item => {
+        const status = item.status || 'new';
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${item.name || '-'}</td>
           <td>${item.company || '-'}</td>
-          <td>${item.email}</td>
+          <td><a href="mailto:${item.email}" style="color: var(--blue);">${item.email}</a></td>
           <td>${item.phone || '-'}</td>
           <td>${item.operation_type || '-'}</td>
-          <td>${item.pain_point || '-'}</td>
-          <td>${item.infrastructure || '-'}</td>
+          <td>${(item.pain_point || '-').substring(0, 40)}${(item.pain_point || '').length > 40 ? '…' : ''}</td>
           <td>${item.budget || '-'}</td>
-          <td>${new Date(item.timestamp).toLocaleString()}</td>
+          <td>
+            <select class="stage-select" onchange="updateBookingStage('${item.id}', this.value)" style="color: ${getStageColor(status)}">
+              ${STAGES.map(s => `<option value="${s}" ${s === status ? 'selected' : ''}>${STAGE_LABELS[s]}</option>`).join('')}
+            </select>
+          </td>
+          <td>
+            <input
+              type="text"
+              class="notes-input"
+              value="${(item.notes || '').replace(/"/g, '&quot;')}"
+              placeholder="Add note…"
+              onblur="updateBookingNotes('${item.id}', this.value)"
+            >
+          </td>
+          <td>${new Date(item.timestamp).toLocaleDateString()}</td>
         `;
         tbody.appendChild(row);
       });
+    }
+
+    function getStageColor(status) {
+      const colors = {
+        new: 'var(--accent)',
+        contacted: 'var(--blue)',
+        qualified: 'var(--purple)',
+        proposal: 'var(--gold)',
+        won: 'var(--success)',
+        lost: 'var(--error)'
+      };
+      return colors[status] || colors.new;
     }
 
     function exportSubscribers() {
@@ -606,9 +814,9 @@
         return;
       }
 
-      let csv = "Email,Timestamp\n";
+      let csv = "Email,Status,Timestamp\n";
       subscribers.forEach(item => {
-        csv += `"${item.email}","${item.timestamp}"\n`;
+        csv += `"${item.email}","Active","${item.timestamp}"\n`;
       });
 
       downloadCSV(csv, `subscribers_${Date.now()}.csv`);
@@ -620,9 +828,9 @@
         return;
       }
 
-      let csv = "Name,Company,Email,Phone,Operation Type,Pain Point,Infrastructure,Budget,Timestamp\n";
+      let csv = "Name,Company,Email,Phone,Operation Type,Pain Point,Infrastructure,Budget,Stage,Notes,Timestamp\n";
       bookings.forEach(item => {
-        csv += `"${item.name || ''}","${item.company || ''}","${item.email}","${item.phone || ''}","${item.operation_type || ''}","${item.pain_point || ''}","${item.infrastructure || ''}","${item.budget || ''}","${item.timestamp}"\n`;
+        csv += `"${item.name || ''}","${item.company || ''}","${item.email}","${item.phone || ''}","${item.operation_type || ''}","${(item.pain_point || '').replace(/"/g, '""')}","${item.infrastructure || ''}","${item.budget || ''}","${item.status || 'new'}","${(item.notes || '').replace(/"/g, '""')}","${item.timestamp}"\n`;
       });
 
       downloadCSV(csv, `bookings_${Date.now()}.csv`);

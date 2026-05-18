@@ -99,6 +99,19 @@ async def signup(email: str = Form(...)):
 async def get_subscribers():
     return JSONResponse(content=read_subscribers())
 
+@app.delete("/api/subscribers/{email}")
+async def delete_subscriber(email: str):
+    subscribers = read_subscribers()
+    email_lower = email.lower().strip()
+    original_len = len(subscribers)
+    subscribers = [s for s in subscribers if s["email"] != email_lower]
+    if len(subscribers) == original_len:
+        return JSONResponse(content={"status": "error", "message": "Subscriber not found"}, status_code=404)
+    success = write_subscribers(subscribers)
+    if not success:
+        return JSONResponse(content={"status": "error", "message": "Failed to delete subscriber"}, status_code=500)
+    return {"status": "success", "message": "Subscriber deleted"}
+
 @app.post("/api/book-call")
 async def book_call(
     name: str = Form(...),
@@ -113,6 +126,7 @@ async def book_call(
     bookings = read_bookings()
 
     booking = {
+        "id": f"bk_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{len(bookings) + 1}",
         "name": name,
         "company": company,
         "email": email.lower().strip(),
@@ -121,7 +135,9 @@ async def book_call(
         "pain_point": pain_point,
         "infrastructure": infrastructure,
         "budget": budget,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
+        "status": "new",
+        "notes": ""
     }
 
     bookings.append(booking)
@@ -138,6 +154,21 @@ async def book_call(
 @app.get("/api/bookings")
 async def get_bookings():
     return JSONResponse(content=read_bookings())
+
+@app.put("/api/bookings/{booking_id}")
+async def update_booking(booking_id: str, status: str = Form(""), notes: str = Form("")):
+    bookings = read_bookings()
+    booking = next((b for b in bookings if b.get("id") == booking_id), None)
+    if not booking:
+        return JSONResponse(content={"status": "error", "message": "Booking not found"}, status_code=404)
+    if status:
+        booking["status"] = status
+    if notes is not None:
+        booking["notes"] = notes
+    success = write_bookings(bookings)
+    if not success:
+        return JSONResponse(content={"status": "error", "message": "Failed to update booking"}, status_code=500)
+    return {"status": "success", "message": "Booking updated"}
 
 @app.get("/{filename}")
 async def serve_file(filename: str):
