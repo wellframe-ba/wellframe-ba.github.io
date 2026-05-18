@@ -579,59 +579,68 @@
       });
     }
 
+    // Load subscribers from server
+    async function loadSubscribersFromServer() {
+      try {
+        const response = await fetch('/api/subscribers');
+        const data = await response.json();
+        // Sync to localStorage for UI
+        saveSubscribers(data);
+        return data;
+      } catch (e) {
+        console.error('Failed to load from server:', e);
+        return getSubscribers();
+      }
+    }
+
     // Form signup action
-    function handleSignup(event) {
+    async function handleSignup(event) {
       event.preventDefault();
-      
+
       const emailInput = document.getElementById('emailInput');
       const submitBtn = document.getElementById('submitBtn');
       const statusMsg = document.getElementById('statusMessage');
-      
+
       const email = emailInput.value.trim().toLowerCase();
-      
+
       if (!email) return;
-      
+
       submitBtn.disabled = true;
       submitBtn.innerHTML = 'Connecting...';
-      
-      // Simulate cryptographic security handshakes to look highly professional
-      setTimeout(() => {
-        const list = getSubscribers();
-        
-        // Prevent duplicate signups
-        const exists = list.some(item => item.email === email);
-        if (exists) {
-          statusMsg.className = 'status-msg error';
-          statusMsg.innerHTML = `❌ Cryptographic validation failed. Gateway error: Email ${email} has already been registered in the secure queue.`;
-          
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = 'Enqueue Invitation ➔';
-          return;
-        }
-        
-        // Save new user record
-        list.push({
-          email: email,
-          timestamp: Date.now()
+
+      try {
+        const response = await fetch('/api/signup', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          body: `email=${encodeURIComponent(email)}`
         });
-        
-        saveSubscribers(list);
-        renderSubscribers();
-        
-        // Show success animation
-        statusMsg.className = 'status-msg success';
-        statusMsg.innerHTML = `🛡️ <strong>Verification Complete.</strong> Email enqueued successfully.<br>Registration code verified. You will receive an automated invitation as soon as our servers are active.`;
-        
-        emailInput.value = '';
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Enqueue Invitation ➔';
-        
-        // Auto fade out success notice after 8 seconds
-        setTimeout(() => {
-          statusMsg.style.display = 'none';
-        }, 8000);
-        
-      }, 800);
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          // Refresh from server
+          await loadSubscribersFromServer();
+          renderSubscribers();
+
+          statusMsg.className = 'status-msg success';
+          statusMsg.innerHTML = `🛡️ <strong>Verification Complete.</strong> Email enqueued successfully.<br>Registration code verified. You will receive an automated invitation as soon as our servers are active.`;
+          emailInput.value = '';
+        } else if (result.status === 'exists') {
+          statusMsg.className = 'status-msg error';
+          statusMsg.innerHTML = `❌ Email ${email} has already been registered in the secure queue.`;
+        } else {
+          statusMsg.className = 'status-msg error';
+          statusMsg.innerHTML = `❌ ${result.message || 'Unknown error'}`;
+        }
+      } catch (e) {
+        statusMsg.className = 'status-msg error';
+        statusMsg.innerHTML = `❌ Network error: ${e.message}`;
+      }
+
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Enqueue Invitation ➔';
+
+      setTimeout(() => { statusMsg.style.display = 'none'; }, 8000);
     }
 
     // Export to CSV Functionality so they can download their leads!
@@ -668,8 +677,11 @@
       }
     }
 
-    // Initial render
-    window.onload = renderSubscribers;
+    // Initial render - load from server first
+    window.onload = async function() {
+      await loadSubscribersFromServer();
+      renderSubscribers();
+    };
   </script>
 
 </body>
