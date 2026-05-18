@@ -1,0 +1,9 @@
+# Google Cloud deployment ignores
+.git
+.gitignore
+docs/
+*.md
+*.html
+.env
+node_modules/
+gcp/

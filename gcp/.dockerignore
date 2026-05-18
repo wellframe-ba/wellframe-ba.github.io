@@ -1,0 +1,8 @@
+# Ignore these files during Docker build
+.git
+.gitignore
+*.md
+docs/
+*.html
+!signup.html
+!index.html
