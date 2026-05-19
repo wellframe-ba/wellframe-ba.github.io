@@ -3,190 +3,285 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wellframe — Admin Console</title>
+  <title>Wellframe — Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #0B1F2E;
-      --bg-card: #0F2940;
-      --bg-card-hover: #143352;
-      --border: #1A3A54;
-      --border-bright: #2A5A7A;
-      --text-primary: #F0F4F8;
-      --text-secondary: #8AABB8;
-      --text-muted: #5A7A8A;
-      --accent: #F28C38;
-      --accent-dim: rgba(242, 140, 56, 0.12);
-      --blue: #0077B6;
-      --gold: #FFB81C;
-      --success: #00BFA5;
-      --success-dim: rgba(0, 191, 165, 0.12);
-      --error: #E05252;
-      --error-dim: rgba(224, 82, 82, 0.12);
-      --purple: #8B5CF6;
-      --purple-dim: rgba(139, 92, 246, 0.12);
+      --bg: #070E17;
+      --bg-surface: #0C1929;
+      --bg-card: #0F2137;
+      --bg-card-hover: #132843;
+      --bg-input: rgba(12, 25, 41, 0.7);
+      --border: #162E47;
+      --border-bright: #1E4070;
+      --border-focus: #2A6090;
+      --text-primary: #E8EEF4;
+      --text-secondary: #7A9BB5;
+      --text-muted: #3D607A;
+      --accent: #E89040;
+      --accent-dim: rgba(232, 144, 64, 0.10);
+      --accent-glow: rgba(232, 144, 64, 0.20);
+      --blue: #3890D8;
+      --blue-dim: rgba(56, 144, 216, 0.10);
+      --gold: #E8A820;
+      --gold-dim: rgba(232, 168, 32, 0.10);
+      --success: #2DCB9A;
+      --success-dim: rgba(45, 203, 154, 0.10);
+      --error: #D84040;
+      --error-dim: rgba(216, 64, 64, 0.10);
+      --purple: #8068E8;
+      --purple-dim: rgba(128, 104, 232, 0.10);
+      --sidebar-width: 220px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: 'Inter', -apple-system, sans-serif;
       background: var(--bg);
-      background-image:
-        radial-gradient(ellipse at 50% 0%, rgba(0, 119, 182, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 100% 100%, rgba(242, 140, 56, 0.08) 0%, transparent 50%);
       color: var(--text-primary);
       font-size: 14px;
       line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 200;
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo .wordmark {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.15em;
+      letter-spacing: 3px;
+      color: #fff;
+    }
+
+    .sidebar-logo .sub {
+      font-size: 0.68em;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+    }
+
+    .nav-section-label {
+      font-size: 0.62em;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      padding: 12px 12px 6px;
+      font-weight: 600;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 0.85em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    .nav-item .icon { font-size: 1.1em; flex-shrink: 0; }
+
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .sidebar-footer .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .sidebar-footer .user-info .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--accent-dim);
+      border: 1px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75em;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .sidebar-footer .user-info .name {
+      font-size: 0.8em;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .sidebar-footer .user-info .role {
+      font-size: 0.68em;
+      color: var(--text-muted);
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 0.8em;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: transparent;
+      width: 100%;
+      margin-top: 4px;
+    }
+
+    .logout-btn:hover { color: var(--error); background: var(--error-dim); }
+
+    /* ── Main ─────────────────────────────────────────────── */
+    .main {
+      margin-left: var(--sidebar-width);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
 
-    /* Navigation */
-    .top-nav {
-      width: 100%;
-      background: rgba(11, 31, 46, 0.9);
+    .topbar {
+      position: sticky;
+      top: 0;
+      background: rgba(7, 14, 23, 0.92);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      padding: 20px 40px;
+      padding: 0 32px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: fixed;
-      top: 0;
-      left: 0;
       z-index: 100;
     }
 
-    .top-nav .logo {
-      font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1.1em;
-      letter-spacing: 2px;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .top-nav .nav-badge {
-      background: var(--success);
-      border: none;
-      border-radius: 4px;
-      padding: 4px 12px;
-      font-size: 0.75em;
-      font-weight: 600;
-      letter-spacing: 1px;
-      color: #0B1F2E;
-      text-transform: uppercase;
-    }
-
-    /* Login Form */
-    .login-container {
-      max-width: 400px;
-      margin: 150px auto 40px;
-      padding: 0 24px;
-    }
-
-    .login-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 40px;
-      text-align: center;
-    }
-
-    .login-card h1 {
-      font-family: 'Outfit', sans-serif;
-      font-size: 1.5em;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-
-    .login-card p {
-      color: var(--text-secondary);
-      font-size: 0.9em;
-      margin-bottom: 24px;
-    }
-
-    .form-group {
+    .topbar-left {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 20px;
-      text-align: left;
+      align-items: center;
+      gap: 16px;
     }
 
-    .form-group label {
-      font-size: 0.75em;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .input-wrapper input {
-      width: 100%;
-      background: rgba(11, 31, 46, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 14px 16px;
-      color: #fff;
-      font-family: inherit;
-      font-size: 0.95em;
-      transition: all 0.3s;
-      outline: none;
-    }
-
-    .input-wrapper input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 15px rgba(242, 140, 56, 0.15);
-    }
-
-    .submit-btn {
-      width: 100%;
-      background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%);
-      border: none;
-      border-radius: 8px;
-      padding: 14px 18px;
-      color: #0B1F2E;
+    .topbar-title {
       font-family: 'Outfit', sans-serif;
-      font-weight: 700;
-      font-size: 1em;
-      letter-spacing: 1px;
+      font-size: 1.05em;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .topbar-badge {
+      font-size: 0.68em;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .topbar-badge.live {
+      background: var(--success-dim);
+      color: var(--success);
+      border: 1px solid rgba(45, 203, 154, 0.2);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .refresh-time {
+      font-size: 0.72em;
+      color: var(--text-muted);
+    }
+
+    .topbar-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: var(--text-secondary);
+      font-size: 0.78em;
+      font-weight: 500;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: inherit;
     }
 
-    .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(242, 140, 56, 0.5);
+    .topbar-btn:hover {
+      border-color: var(--border-bright);
+      color: var(--text-primary);
+      background: var(--bg-card);
     }
 
-    .error-msg {
-      background: rgba(224, 82, 82, 0.08);
-      border: 1px solid rgba(224, 82, 82, 0.2);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 20px;
-      color: var(--error);
-      font-size: 0.85em;
-      display: none;
+    /* ── Content ─────────────────────────────────────────── */
+    .content {
+      padding: 28px 32px;
+      flex: 1;
     }
 
-    .error-msg.show { display: block; }
-
-    /* Admin Content */
-    .admin-container {
-      max-width: 1200px;
-      margin: 120px auto 40px;
-      padding: 0 24px;
-      display: none;
+    /* ── Section ─────────────────────────────────────────── */
+    .section {
+      margin-bottom: 32px;
     }
-
-    .admin-container.show { display: block; }
 
     .section-header {
       display: flex;
@@ -195,25 +290,26 @@
       margin-bottom: 16px;
     }
 
-    .section-header h2 {
+    .section-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.4em;
+      font-size: 1.15em;
+      font-weight: 700;
       color: #fff;
     }
 
-    .section-header h2 span { color: var(--accent); }
+    .section-title span { color: var(--accent); }
 
     .section-actions {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .admin-btn {
+    .action-btn {
       background: var(--bg-card);
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      padding: 8px 16px;
-      font-size: 0.78em;
+      padding: 7px 14px;
+      font-size: 0.75em;
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
@@ -221,29 +317,34 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      font-family: inherit;
     }
 
-    .admin-btn:hover {
+    .action-btn:hover {
       background: var(--accent-dim);
-      border-color: rgba(242, 140, 56, 0.3);
+      border-color: rgba(232, 144, 64, 0.3);
       color: var(--accent);
     }
 
-    .admin-btn.danger:hover {
+    .action-btn.danger:hover {
       background: var(--error-dim);
-      border-color: rgba(224, 82, 82, 0.3);
+      border-color: rgba(216, 64, 64, 0.3);
       color: var(--error);
     }
 
-    .admin-panel {
+    /* ── Card ─────────────────────────────────────────────── */
+    .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 14px;
       padding: 20px;
-      margin-bottom: 28px;
+      transition: border-color 0.2s;
     }
 
-    .stats-row {
+    .card:hover { border-color: var(--border-bright); }
+
+    /* ── Stats Grid ──────────────────────────────────────── */
+    .stats-grid {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 12px;
@@ -253,131 +354,118 @@
     }
 
     .stat-card {
-      text-align: center;
-      padding: 12px 8px;
-      background: rgba(11, 31, 46, 0.4);
+      padding: 14px 12px;
+      background: var(--bg-surface);
       border-radius: 10px;
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all 0.2s;
     }
 
-    .stat-card .number {
+    .stat-card:hover { border-color: var(--border-bright); }
+
+    .stat-card .value {
       font-family: 'Outfit', sans-serif;
-      font-size: 1.6em;
+      font-size: 1.75em;
       font-weight: 800;
-      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 6px;
     }
+
+    .stat-card .value.accent { color: var(--accent); }
+    .stat-card .value.success { color: var(--success); }
+    .stat-card .value.blue { color: var(--blue); }
+    .stat-card .value.gold { color: var(--gold); }
+    .stat-card .value.purple { color: var(--purple); }
 
     .stat-card .label {
       font-size: 0.65em;
-      color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      font-weight: 600;
     }
 
-    /* Scrollable Tables */
-    .table-scroll {
+    /* ── Tables ──────────────────────────────────────────── */
+    .table-wrap {
       overflow-x: auto;
-      max-height: 340px;
+      max-height: 320px;
       overflow-y: auto;
       border-radius: 8px;
       border: 1px solid var(--border);
+      background: var(--bg-surface);
     }
 
-    .table-scroll::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
+    .table-wrap::-webkit-scrollbar { width: 5px; height: 5px; }
+    .table-wrap::-webkit-scrollbar-track { background: var(--bg); border-radius: 3px; }
+    .table-wrap::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
 
-    .table-scroll::-webkit-scrollbar-track {
-      background: var(--bg);
-      border-radius: 3px;
-    }
-
-    .table-scroll::-webkit-scrollbar-thumb {
-      background: var(--border-bright);
-      border-radius: 3px;
-    }
-
-    .data-table {
+    table.data-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.78em;
-      text-align: left;
     }
 
-    .data-table th {
-      color: var(--accent);
-      padding: 10px 14px;
-      border-bottom: 1px solid rgba(242, 140, 56, 0.2);
-      font-weight: 600;
-      letter-spacing: 0.5px;
+    table.data-table thead tr {
+      background: var(--bg-card);
       position: sticky;
       top: 0;
-      background: var(--bg-card);
-      white-space: nowrap;
-      z-index: 10;
+      z-index: 5;
     }
 
-    .data-table td {
+    table.data-table th {
+      padding: 10px 14px;
+      text-align: left;
+      font-size: 0.68em;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+
+    table.data-table td {
       padding: 10px 14px;
       border-bottom: 1px solid var(--border);
       color: var(--text-primary);
       vertical-align: middle;
     }
 
-    .data-table tr:hover td {
-      background: rgba(242, 140, 56, 0.04);
+    table.data-table tbody tr {
+      transition: background 0.15s;
     }
 
-    .data-table tr:last-child td {
-      border-bottom: none;
+    table.data-table tbody tr:hover td {
+      background: rgba(232, 144, 64, 0.04);
     }
 
-    /* Status Badges */
+    table.data-table tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Badges ──────────────────────────────────────────── */
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 3px 10px;
-      border-radius: 12px;
-      font-size: 0.72em;
+      padding: 3px 9px;
+      border-radius: 20px;
+      font-size: 0.7em;
       font-weight: 600;
       white-space: nowrap;
+      letter-spacing: 0.3px;
     }
 
-    .badge.new { background: var(--accent-dim); color: var(--accent); }
-    .badge.contacted { background: rgba(0, 119, 182, 0.12); color: var(--blue); }
+    .badge.active   { background: var(--success-dim); color: var(--success); }
+    .badge.new     { background: var(--accent-dim); color: var(--accent); }
+    .badge.contacted { background: var(--blue-dim); color: var(--blue); }
     .badge.qualified { background: var(--purple-dim); color: var(--purple); }
-    .badge.proposal { background: rgba(255, 184, 28, 0.12); color: var(--gold); }
-    .badge.won { background: var(--success-dim); color: var(--success); }
-    .badge.lost { background: var(--error-dim); color: var(--error); }
+    .badge.proposal { background: var(--gold-dim); color: var(--gold); }
+    .badge.won     { background: var(--success-dim); color: var(--success); }
+    .badge.lost     { background: var(--error-dim); color: var(--error); }
 
-    /* Action Buttons */
-    .action-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 5px 8px;
-      cursor: pointer;
-      font-size: 0.85em;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .action-btn:hover { border-color: var(--border-bright); background: rgba(255,255,255,0.05); }
-
-    .action-btn.delete:hover { border-color: rgba(224, 82, 82, 0.5); color: var(--error); background: var(--error-dim); }
-
-    .action-group {
-      display: flex;
-      gap: 4px;
-      align-items: center;
-    }
-
-    /* Stage Select */
+    /* ── Stage Select ────────────────────────────────────── */
     .stage-select {
-      background: var(--bg);
+      background: var(--bg-input);
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text-primary);
@@ -386,465 +474,746 @@
       font-family: inherit;
       cursor: pointer;
       outline: none;
-      min-width: 110px;
+      min-width: 105px;
+      transition: border-color 0.2s;
     }
 
-    .stage-select:focus { border-color: var(--accent); }
+    .stage-select:focus { border-color: var(--border-focus); }
 
-    /* Notes Input */
+    /* ── Notes Input ──────────────────────────────────────── */
     .notes-input {
       background: transparent;
       border: 1px solid transparent;
       border-radius: 4px;
       color: var(--text-secondary);
-      padding: 4px 6px;
+      padding: 4px 8px;
       font-size: 0.75em;
       font-family: inherit;
-      width: 120px;
+      width: 130px;
       transition: all 0.2s;
       outline: none;
     }
 
-    .notes-input:hover { border-color: var(--border); background: rgba(11,31,46,0.5); }
-    .notes-input:focus { border-color: var(--accent); background: rgba(11,31,46,0.8); color: var(--text-primary); }
+    .notes-input:hover { border-color: var(--border); background: var(--bg-input); }
+    .notes-input:focus { border-color: var(--border-focus); background: var(--bg-input); color: var(--text-primary); }
 
+    /* ── Delete Btn ─────────────────────────────────────── */
+    .delete-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 5px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.85em;
+      color: var(--text-muted);
+      transition: all 0.2s;
+    }
+
+    .delete-btn:hover { border-color: rgba(216, 64, 64, 0.4); color: var(--error); background: var(--error-dim); }
+
+    /* ── Empty State ─────────────────────────────────────── */
     .empty-state {
       text-align: center;
-      padding: 40px 0;
+      padding: 40px 20px;
       color: var(--text-muted);
     }
 
-    .empty-state .icon {
-      font-size: 2.5em;
-      margin-bottom: 12px;
+    .empty-state .icon { font-size: 2.2em; margin-bottom: 10px; }
+    .empty-state .msg { font-size: 0.85em; }
+
+    /* ── Legend ───────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
     }
 
-    /* Footer */
-    footer {
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7em;
+      color: var(--text-muted);
+    }
+
+    /* ── Skeleton Loader ─────────────────────────────────── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-card-hover) 50%, var(--bg-surface) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      height: 14px;
+      margin-bottom: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── Login ───────────────────────────────────────────── */
+    .login-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse at 30% 0%, rgba(56, 144, 216, 0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(232, 144, 64, 0.10) 0%, transparent 50%);
+    }
+
+    .login-card {
       width: 100%;
-      background: rgba(5, 15, 25, 0.8);
+      max-width: 400px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 44px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+    }
+
+    .login-card .lock-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(232, 144, 64, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 1.3em;
+    }
+
+    .login-card h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.5em;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .login-card .subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.85em;
+      margin-bottom: 28px;
+    }
+
+    .form-field {
+      margin-bottom: 18px;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 0.7em;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-field input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.95em;
+      outline: none;
+      transition: all 0.25s;
+    }
+
+    .form-field input:focus {
+      border-color: var(--border-focus);
+      box-shadow: 0 0 20px rgba(56, 144, 216, 0.12);
+    }
+
+    .login-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--gold) 100%);
+      border: none;
+      border-radius: 10px;
+      padding: 14px 20px;
+      color: #070E17;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 0.95em;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: all 0.25s;
+      margin-top: 4px;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(232, 144, 64, 0.35);
+    }
+
+    .login-btn:active { transform: translateY(0); }
+
+    .login-error {
+      background: var(--error-dim);
+      border: 1px solid rgba(216, 64, 64, 0.2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      color: var(--error);
+      font-size: 0.82em;
+      display: none;
+    }
+
+    .login-error.show { display: block; }
+
+    /* ── Toast ────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 0.82em;
+      color: var(--text-primary);
+      z-index: 1000;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      max-width: 320px;
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-color: rgba(45, 203, 154, 0.3); }
+    .toast.error { border-color: rgba(216, 64, 64, 0.3); }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    footer {
       border-top: 1px solid var(--border);
-      padding: 32px 40px;
+      padding: 20px 32px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       color: var(--text-muted);
-      font-size: 0.78em;
-      margin-top: auto;
+      font-size: 0.75em;
     }
 
-    /* Mobile */
-    @media (max-width: 900px) {
-      .stats-row { grid-template-columns: repeat(3, 1fr); }
-      .section-header { flex-direction: column; gap: 12px; align-items: flex-start; }
-      .section-actions { flex-wrap: wrap; }
+    /* ── Responsive ──────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(3, 1fr); }
+      :root { --sidebar-width: 0px; }
+      .sidebar { transform: translateX(-100%); }
+      .main { margin-left: 0; }
+      .hamburger { display: flex; }
+    }
+
+    @media (max-width: 640px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .content { padding: 16px; }
+      .topbar { padding: 0 16px; }
+      footer { flex-direction: column; gap: 6px; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <nav class="top-nav">
-    <a href="/" style="text-decoration: none;"><div class="logo">WELLFRAME</div></a>
-    <div class="nav-badge">● Admin Console</div>
-  </nav>
-
   <!-- Login -->
-  <div class="login-container" id="loginContainer">
+  <div class="login-page" id="loginPage">
     <div class="login-card">
+      <div class="lock-icon">🔒</div>
       <h1>Admin Access</h1>
-      <p>Enter your credentials to access the dashboard.</p>
-
-      <div class="error-msg" id="errorMsg">Invalid credentials. Please try again.</div>
-
-      <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label for="passwordInput">Access Code</label>
-          <div class="input-wrapper">
-            <input
-              type="password"
-              id="passwordInput"
-              placeholder="Enter admin password"
-              required
-              autocomplete="current-password"
-            >
-          </div>
+      <p class="subtitle">Sign in to the Wellframe dashboard</p>
+      <div class="login-error" id="loginError">Invalid credentials. Please try again.</div>
+      <form id="loginForm">
+        <div class="form-field">
+          <label for="usernameInput">Username</label>
+          <input type="text" id="usernameInput" placeholder="admin" autocomplete="username" required>
         </div>
-        <button type="submit" class="submit-btn">Access Dashboard</button>
+        <div class="form-field">
+          <label for="passwordInput">Password</label>
+          <input type="password" id="passwordInput" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="login-btn">Sign In →</button>
       </form>
     </div>
   </div>
 
-  <!-- Admin Dashboard -->
-  <div class="admin-container" id="adminContainer">
+  <!-- Admin -->
+  <div id="adminApp" style="display:none;">
 
-    <!-- Subscribers Section -->
-    <div class="section-header">
-      <h2>Email <span>Waitlist</span></h2>
-      <div class="section-actions">
-        <button class="admin-btn" onclick="refreshAll()">↻ Refresh</button>
-        <button class="admin-btn" onclick="exportSubscribers()">↓ Export CSV</button>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <div class="wordmark">WELLFRAME</div>
+        <div class="sub">Admin Console</div>
       </div>
-    </div>
-
-    <div class="admin-panel">
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="number" id="subTotal">0</div>
-          <div class="label">Total</div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Overview</div>
+        <button class="nav-item active" onclick="switchView('waitlist')">
+          <span class="icon">📋</span> Email Waitlist
+        </button>
+        <button class="nav-item" onclick="switchView('pipeline')">
+          <span class="icon">🔗</span> Lead Pipeline
+        </button>
+        <div class="nav-section-label">Manage</div>
+        <button class="nav-item" onclick="refreshAll()">
+          <span class="icon">↻</span> Refresh Data
+        </button>
+        <button class="nav-item" onclick="exportAll()">
+          <span class="icon">↓</span> Export All CSV
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="avatar" id="userAvatar">A</div>
+          <div>
+            <div class="name" id="userName">Admin</div>
+            <div class="role">Administrator</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="number" id="subRecent">0</div>
-          <div class="label">Last 7 Days</div>
-        </div>
-        <div class="stat-card">
-          <div class="number" id="subToday">0</div>
-          <div class="label">Today</div>
-        </div>
-        <div class="stat-card">
-          <div class="number" id="bookTotal">0</div>
-          <div class="label">Leads</div>
-        </div>
-        <div class="stat-card">
-          <div class="number" id="bookWon">0</div>
-          <div class="label">Won</div>
-        </div>
+        <button class="logout-btn" onclick="logout()">
+          <span>↩</span> Sign Out
+        </button>
       </div>
+    </aside>
 
-      <div class="table-scroll">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Email</th>
-              <th>Status</th>
-              <th>Registered</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="subTableBody">
-          </tbody>
-        </table>
-        <div class="empty-state" id="subEmpty" style="display:none;">
-          <div class="icon">📭</div>
-          <div>No subscribers yet</div>
+    <!-- Main -->
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="topbar-title" id="topbarTitle">Email Waitlist</div>
+          <div class="topbar-badge live">● Live</div>
         </div>
-      </div>
-    </div>
+        <div class="topbar-right">
+          <span class="refresh-time" id="refreshTime"></span>
+          <button class="topbar-btn" onclick="refreshAll()">↻ Refresh</button>
+        </div>
+      </header>
 
-    <!-- Discovery Calls / Lead Pipeline Section -->
-    <div class="section-header">
-      <h2>Lead <span>Pipeline</span></h2>
-      <div class="section-actions">
-        <button class="admin-btn" onclick="refreshAll()">↻ Refresh</button>
-        <button class="admin-btn" onclick="exportBookings()">↓ Export CSV</button>
-      </div>
-    </div>
+      <div class="content">
 
-    <div class="admin-panel">
-      <div class="table-scroll">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Company</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Operation</th>
-              <th>Pain Point</th>
-              <th>Budget</th>
-              <th>Stage</th>
-              <th>Notes</th>
-              <th>Booked</th>
-            </tr>
-          </thead>
-          <tbody id="bookingTableBody">
-          </tbody>
-        </table>
-        <div class="empty-state" id="bookingEmpty" style="display:none;">
-          <div class="icon">📞</div>
-          <div>No discovery call requests yet</div>
+        <!-- ── Waitlist ── -->
+        <div id="waitlistView">
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">Email <span>Waitlist</span></div>
+              <div class="section-actions">
+                <button class="action-btn" onclick="exportSubscribers()">↓ Export CSV</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="value accent" id="subTotal">—</div>
+                  <div class="label">Total Subscribers</div>
+                </div>
+                <div class="stat-card">
+                  <div class="value blue" id="subRecent">—</div>
+                  <div class="label">Last 7 Days</div>
+                </div>
+                <div class="stat-card">
+                  <div class="value gold" id="subToday">—</div>
+                  <div class="label">Today</div>
+                </div>
+                <div class="stat-card">
+                  <div class="value purple" id="bookTotal">—</div>
+                  <div class="label">Total Leads</div>
+                </div>
+                <div class="stat-card">
+                  <div class="value success" id="bookWon">—</div>
+                  <div class="label">Won Opportunities</div>
+                </div>
+              </div>
+              <div class="table-wrap" id="subTableWrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Email</th>
+                      <th>Status</th>
+                      <th>Registered</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="subTableBody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="subEmpty" style="display:none;">
+                <div class="icon">📭</div>
+                <div class="msg">No subscribers yet</div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div style="margin-top: 16px; display: flex; gap: 16px; flex-wrap: wrap;">
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
-          <span class="badge new">●</span> New
+        <!-- ── Pipeline ── -->
+        <div id="pipelineView" style="display:none;">
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">Lead <span>Pipeline</span></div>
+              <div class="section-actions">
+                <button class="action-btn" onclick="exportBookings()">↓ Export CSV</button>
+              </div>
+            </div>
+            <div class="card">
+              <div class="table-wrap" id="bookingTableWrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Company</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Operation</th>
+                      <th>Pain Point</th>
+                      <th>Budget</th>
+                      <th>Stage</th>
+                      <th>Notes</th>
+                      <th>Booked</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bookingTableBody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="bookingEmpty" style="display:none;">
+                <div class="icon">📞</div>
+                <div class="msg">No discovery call requests yet</div>
+              </div>
+              <div class="legend">
+                <div class="legend-item"><span class="badge new">●</span> New</div>
+                <div class="legend-item"><span class="badge contacted">●</span> Contacted</div>
+                <div class="legend-item"><span class="badge qualified">●</span> Qualified</div>
+                <div class="legend-item"><span class="badge proposal">●</span> Proposal</div>
+                <div class="legend-item"><span class="badge won">●</span> Won</div>
+                <div class="legend-item"><span class="badge lost">●</span> Lost</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
-          <span class="badge contacted">●</span> Contacted
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
-          <span class="badge qualified">●</span> Qualified
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
-          <span class="badge proposal">●</span> Proposal
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
-          <span class="badge won">●</span> Won
-        </div>
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72em; color: var(--text-muted);">
-          <span class="badge lost">●</span> Lost
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <footer>
-    <div>© 2026 Wellframe. All Rights Reserved.</div>
-    <div>BA Research • Calgary, AB, Canada</div>
-  </footer>
+      </div><!-- /content -->
+
+      <footer>
+        <div>© 2026 Wellframe. All Rights Reserved.</div>
+        <div>BA Research • Calgary, AB, Canada</div>
+      </footer>
+    </div><!-- /main -->
+  </div><!-- /adminApp -->
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
 
   <script>
-    const ADMIN_PASSWORD = 'tiezi0508';
-    let subscribers = [];
-    let bookings = [];
-
     const STAGES = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost'];
     const STAGE_LABELS = {
-      new: 'New',
-      contacted: 'Contacted',
-      qualified: 'Qualified',
-      proposal: 'Proposal',
-      won: 'Won',
-      lost: 'Lost'
+      new: 'New', contacted: 'Contacted', qualified: 'Qualified',
+      proposal: 'Proposal', won: 'Won', lost: 'Lost'
     };
 
-    function handleLogin(event) {
-      event.preventDefault();
+    let subscribers = [];
+    let bookings = [];
+    let sessionToken = sessionStorage.getItem('admin_token') || null;
+    let idleTimer = null;
+
+    // ── Auth ──────────────────────────────────────────────────────
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('usernameInput').value.trim();
       const password = document.getElementById('passwordInput').value;
-      if (password === ADMIN_PASSWORD) {
-        document.getElementById('loginContainer').style.display = 'none';
-        document.getElementById('adminContainer').classList.add('show');
-        loadAll();
-      } else {
-        document.getElementById('errorMsg').classList.add('show');
-        setTimeout(() => {
-          document.getElementById('errorMsg').classList.remove('show');
-        }, 3000);
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+        });
+        const data = await res.json();
+
+        if (data.status === 'success' && data.token) {
+          sessionToken = data.token;
+          sessionStorage.setItem('admin_token', sessionToken);
+          showAdmin();
+        } else {
+          showError();
+        }
+      } catch (err) {
+        showError();
       }
     }
 
-    async function loadAll() {
-      await Promise.all([loadSubscribers(), loadBookings()]);
+    function showError() {
+      const el = document.getElementById('loginError');
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 3500);
     }
 
-    function refreshAll() {
-      loadAll();
+    async function verifySession() {
+      if (!sessionToken) return false;
+      try {
+        const res = await fetch('/api/admin/me', {
+          headers: { 'X-Session-Token': sessionToken }
+        });
+        if (res.ok) return true;
+        sessionStorage.removeItem('admin_token');
+        sessionToken = null;
+        return false;
+      } catch {
+        return false;
+      }
     }
+
+    function logout() {
+      if (sessionToken) {
+        fetch('/api/admin/logout', {
+          method: 'POST',
+          headers: { 'X-Session-Token': sessionToken }
+        }).catch(() => {});
+      }
+      sessionStorage.removeItem('admin_token');
+      sessionToken = null;
+      document.getElementById('adminApp').style.display = 'none';
+      document.getElementById('loginPage').style.display = 'flex';
+    }
+
+    function showAdmin() {
+      document.getElementById('loginPage').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'block';
+      loadAll();
+      resetIdleTimer();
+    }
+
+    function resetIdleTimer() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(logout, 30 * 60 * 1000); // 30 min
+    }
+    document.addEventListener('mousemove', resetIdleTimer);
+    document.addEventListener('keypress', resetIdleTimer);
+
+    // ── Data Loading ───────────────────────────────────────────────
+    async function loadAll() {
+      await Promise.all([loadSubscribers(), loadBookings()]);
+      document.getElementById('refreshTime').textContent = 'Updated ' + new Date().toLocaleTimeString();
+    }
+
+    function refreshAll() { loadAll(); }
 
     async function loadSubscribers() {
       try {
-        const response = await fetch('/api/subscribers');
-        subscribers = await response.json();
+        const res = await fetch('/api/subscribers');
+        subscribers = await res.json();
         renderSubscribers();
         updateSubStats();
-      } catch (e) {
-        console.error('Failed to load subscribers:', e);
-      }
+      } catch (e) { console.error(e); }
     }
 
     async function loadBookings() {
       try {
-        const response = await fetch('/api/bookings');
-        bookings = await response.json();
+        const res = await fetch('/api/bookings');
+        bookings = await res.json();
         renderBookings();
         updateBookingStats();
-      } catch (e) {
-        console.error('Failed to load bookings:', e);
-      }
+      } catch (e) { console.error(e); }
     }
 
     function updateSubStats() {
       document.getElementById('subTotal').textContent = subscribers.length;
-
-      const weekAgo = new Date();
-      weekAgo.setDate(weekAgo.getDate() - 7);
-      const recentCount = subscribers.filter(s => new Date(s.timestamp) > weekAgo).length;
-      document.getElementById('subRecent').textContent = recentCount;
-
+      const w7 = new Date(); w7.setDate(w7.getDate() - 7);
       const today = new Date().toDateString();
-      const todayCount = subscribers.filter(s => new Date(s.timestamp).toDateString() === today).length;
-      document.getElementById('subToday').textContent = todayCount;
+      document.getElementById('subRecent').textContent = subscribers.filter(s => new Date(s.timestamp) > w7).length;
+      document.getElementById('subToday').textContent = subscribers.filter(s => new Date(s.timestamp).toDateString() === today).length;
     }
 
     function updateBookingStats() {
       document.getElementById('bookTotal').textContent = bookings.length;
-      const wonCount = bookings.filter(b => b.status === 'won').length;
-      document.getElementById('bookWon').textContent = wonCount;
+      document.getElementById('bookWon').textContent = bookings.filter(b => b.status === 'won').length;
     }
 
+    // ── Subscribers ─────────────────────────────────────────────────
     async function deleteSubscriber(email) {
-      if (!confirm(`Delete ${email} from waitlist?`)) return;
+      if (!confirm(`Delete ${email}?`)) return;
       try {
         const res = await fetch(`/api/subscribers/${encodeURIComponent(email)}`, { method: 'DELETE' });
-        const data = await res.json();
-        if (data.status === 'success') {
-          await loadSubscribers();
-        } else {
-          alert(data.message || 'Delete failed');
-        }
-      } catch (e) {
-        alert('Delete failed: ' + e.message);
-      }
-    }
-
-    async function updateBookingStage(bookingId, newStatus) {
-      try {
-        const res = await fetch(`/api/bookings/${bookingId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `status=${encodeURIComponent(newStatus)}`
-        });
-        const data = await res.json();
-        if (data.status !== 'success') {
-          alert(data.message || 'Update failed');
-        }
-      } catch (e) {
-        alert('Update failed: ' + e.message);
-      }
-    }
-
-    async function updateBookingNotes(bookingId, notes) {
-      try {
-        await fetch(`/api/bookings/${bookingId}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `notes=${encodeURIComponent(notes)}`
-        });
-      } catch (e) {
-        console.error('Failed to update notes:', e);
-      }
+        const d = await res.json();
+        if (d.status === 'success') { await loadSubscribers(); toast('Subscriber removed', 'success'); }
+        else { toast(d.message || 'Delete failed', 'error'); }
+      } catch (e) { toast('Delete failed', 'error'); }
     }
 
     function renderSubscribers() {
       const tbody = document.getElementById('subTableBody');
+      const wrap = document.getElementById('subTableWrap');
       const empty = document.getElementById('subEmpty');
-      const table = document.querySelector('#subTableBody').closest('.table-scroll');
-
       tbody.innerHTML = '';
 
-      if (subscribers.length === 0) {
-        table.style.display = 'none';
-        empty.style.display = 'block';
-        return;
+      if (!subscribers.length) {
+        wrap.style.display = 'none'; empty.style.display = 'block'; return;
       }
-
-      table.style.display = 'block';
-      empty.style.display = 'none';
+      wrap.style.display = 'block'; empty.style.display = 'none';
 
       const sorted = [...subscribers].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
       sorted.forEach(item => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
           <td>${item.email}</td>
-          <td><span class="badge new">● Active</span></td>
+          <td><span class="badge active">● Active</span></td>
           <td>${new Date(item.timestamp).toLocaleDateString()}</td>
-          <td>
-            <button class="action-btn delete" onclick="deleteSubscriber('${item.email.replace(/'/g, "\\'")}')" title="Delete">✕</button>
-          </td>
+          <td><button class="delete-btn" onclick="deleteSubscriber('${item.email.replace(/'/g, "\\'")}')">✕</button></td>
         `;
-        tbody.appendChild(row);
+        tbody.appendChild(tr);
       });
+    }
+
+    // ── Bookings ───────────────────────────────────────────────────
+    async function updateBookingStage(id, status) {
+      try {
+        await fetch(`/api/bookings/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `status=${encodeURIComponent(status)}`
+        });
+        toast('Stage updated');
+      } catch (e) { toast('Update failed', 'error'); }
+    }
+
+    async function updateBookingNotes(id, notes) {
+      try {
+        await fetch(`/api/bookings/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `notes=${encodeURIComponent(notes)}`
+        });
+      } catch (e) { /* silent */ }
     }
 
     function renderBookings() {
       const tbody = document.getElementById('bookingTableBody');
+      const wrap = document.getElementById('bookingTableWrap');
       const empty = document.getElementById('bookingEmpty');
-      const table = document.querySelector('#bookingTableBody').closest('.table-scroll');
-
       tbody.innerHTML = '';
 
-      if (bookings.length === 0) {
-        table.style.display = 'none';
-        empty.style.display = 'block';
-        return;
+      if (!bookings.length) {
+        wrap.style.display = 'none'; empty.style.display = 'block'; return;
       }
-
-      table.style.display = 'block';
-      empty.style.display = 'none';
+      wrap.style.display = 'block'; empty.style.display = 'none';
 
       const sorted = [...bookings].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
       sorted.forEach(item => {
         const status = item.status || 'new';
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${item.name || '-'}</td>
-          <td>${item.company || '-'}</td>
-          <td><a href="mailto:${item.email}" style="color: var(--blue);">${item.email}</a></td>
-          <td>${item.phone || '-'}</td>
-          <td>${item.operation_type || '-'}</td>
-          <td>${(item.pain_point || '-').substring(0, 40)}${(item.pain_point || '').length > 40 ? '…' : ''}</td>
-          <td>${item.budget || '-'}</td>
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${esc(item.name) || '—'}</td>
+          <td>${esc(item.company) || '—'}</td>
+          <td><a href="mailto:${item.email}" style="color:var(--blue)">${item.email}</a></td>
+          <td>${esc(item.phone) || '—'}</td>
+          <td>${esc(item.operation_type) || '—'}</td>
+          <td title="${esc(item.pain_point)}">${truncate(item.pain_point, 36)}</td>
+          <td>${esc(item.budget) || '—'}</td>
           <td>
-            <select class="stage-select" onchange="updateBookingStage('${item.id}', this.value)" style="color: ${getStageColor(status)}">
+            <select class="stage-select" onchange="updateBookingStage('${item.id}', this.value)">
               ${STAGES.map(s => `<option value="${s}" ${s === status ? 'selected' : ''}>${STAGE_LABELS[s]}</option>`).join('')}
             </select>
           </td>
           <td>
-            <input
-              type="text"
-              class="notes-input"
-              value="${(item.notes || '').replace(/"/g, '&quot;')}"
+            <input type="text" class="notes-input"
+              value="${esc(item.notes || '')}"
               placeholder="Add note…"
-              onblur="updateBookingNotes('${item.id}', this.value)"
-            >
+              onblur="updateBookingNotes('${item.id}', this.value)">
           </td>
           <td>${new Date(item.timestamp).toLocaleDateString()}</td>
         `;
-        tbody.appendChild(row);
+        tbody.appendChild(tr);
       });
     }
 
-    function getStageColor(status) {
-      const colors = {
-        new: 'var(--accent)',
-        contacted: 'var(--blue)',
-        qualified: 'var(--purple)',
-        proposal: 'var(--gold)',
-        won: 'var(--success)',
-        lost: 'var(--error)'
-      };
-      return colors[status] || colors.new;
-    }
-
+    // ── Export ─────────────────────────────────────────────────────
     function exportSubscribers() {
-      if (subscribers.length === 0) {
-        alert("No subscribers to export.");
-        return;
-      }
-
-      let csv = "Email,Status,Timestamp\n";
-      subscribers.forEach(item => {
-        csv += `"${item.email}","Active","${item.timestamp}"\n`;
-      });
-
-      downloadCSV(csv, `subscribers_${Date.now()}.csv`);
+      if (!subscribers.length) { toast('No subscribers to export', 'error'); return; }
+      let csv = "Email,Timestamp\n";
+      subscribers.forEach(s => csv += `"${s.email}","${s.timestamp}"\n`);
+      downloadCSV(csv, `waitlist_${Date.now()}.csv`);
     }
 
     function exportBookings() {
-      if (bookings.length === 0) {
-        alert("No bookings to export.");
-        return;
-      }
+      if (!bookings.length) { toast('No bookings to export', 'error'); return; }
+      let csv = "Name,Company,Email,Phone,Operation,Pain Point,Infrastructure,Budget,Stage,Notes,Timestamp\n";
+      bookings.forEach(b => csv += `"${esc(b.name)}","${esc(b.company)}","${b.email}","${esc(b.phone)}","${esc(b.operation_type)}","${esc(b.pain_point)}","${esc(b.infrastructure)}","${esc(b.budget)}","${b.status}","${esc(b.notes)}","${b.timestamp}"\n`);
+      downloadCSV(csv, `pipeline_${Date.now()}.csv`);
+    }
 
-      let csv = "Name,Company,Email,Phone,Operation Type,Pain Point,Infrastructure,Budget,Stage,Notes,Timestamp\n";
-      bookings.forEach(item => {
-        csv += `"${item.name || ''}","${item.company || ''}","${item.email}","${item.phone || ''}","${item.operation_type || ''}","${(item.pain_point || '').replace(/"/g, '""')}","${item.infrastructure || ''}","${item.budget || ''}","${item.status || 'new'}","${(item.notes || '').replace(/"/g, '""')}","${item.timestamp}"\n`;
-      });
-
-      downloadCSV(csv, `bookings_${Date.now()}.csv`);
+    function exportAll() {
+      exportSubscribers();
+      exportBookings();
     }
 
     function downloadCSV(content, filename) {
-      const encodedUri = encodeURI("data:text/csv;charset=utf-8," + content);
-      const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", filename);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const a = document.createElement('a');
+      a.href = encodeURI("data:text/csv;charset=utf-8," + content);
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
+
+    // ── Navigation ───────────────────────────────────────────────
+    function switchView(view) {
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      event.target.closest('.nav-item').classList.add('active');
+      if (view === 'waitlist') {
+        document.getElementById('waitlistView').style.display = 'block';
+        document.getElementById('pipelineView').style.display = 'none';
+        document.getElementById('topbarTitle').textContent = 'Email Waitlist';
+      } else {
+        document.getElementById('waitlistView').style.display = 'none';
+        document.getElementById('pipelineView').style.display = 'block';
+        document.getElementById('topbarTitle').textContent = 'Lead Pipeline';
+      }
+    }
+
+    // ── Utilities ─────────────────────────────────────────────────
+    function esc(v) { return v == null ? '' : String(v).replace(/"/g, '""'); }
+    function truncate(v, len) {
+      if (!v) return '—';
+      return v.length > len ? v.substring(0, len) + '…' : v;
+    }
+
+    function toast(msg, type = 'success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ── Init ───────────────────────────────────────────────────────
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+
+    (async () => {
+      if (await verifySession()) {
+        showAdmin();
+      } else {
+        document.getElementById('loginPage').style.display = 'flex';
+      }
+    })();
   </script>
 
 </body>
